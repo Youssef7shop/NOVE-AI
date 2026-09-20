@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>NOVA AI — Admin Panel</title>
+
+  <link rel="stylesheet" href="admin.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+
+    <div class="admin-logo">
+      <div class="logo-icon">N</div>
+
+      <div>
+        <h2>NOVA</h2>
+        <span>ADMIN</span>
+      </div>
+    </div>
+
+    <nav>
+
+      <button class="admin-nav active" data-section="dashboard">
+        <span>📊</span>
+        Dashboard
+      </button>
+
+      <button class="admin-nav" data-section="users">
+        <span>👥</span>
+        Users
+      </button>
+
+      <button class="admin-nav" data-section="projects">
+        <span>📁</span>
+        Projects
+      </button>
+
+      <button class="admin-nav" data-section="tickets">
+        <span>🎧</span>
+        Support Tickets
+      </button>
+
+      <button class="admin-nav" data-section="settings">
+        <span>⚙️</span>
+        Settings
+      </button>
+
+      <button class="admin-nav" data-section="guard">
+        <span>🛡️</span>
+        NOVA Guard
+      </button>
+
+      <button class="admin-nav" data-section="activity">
+        <span>📋</span>
+        Activity Logs
+      </button>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <button id="backToApp">
+        ← Back to NOVA
+      </button>
+
+      <button id="adminLogout" class="logout-btn">
+        🚪 Logout
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <!-- TOPBAR -->
+    <header class="admin-topbar">
+
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">
+          Manage your NOVA AI platform
+        </p>
+      </div>
+
+      <div class="admin-profile">
+
+        <div class="admin-avatar" id="adminAvatar">
+          A
+        </div>
+
+        <div>
+          <strong id="adminName">
+            Admin
+          </strong>
+
+          <small>
+            Administrator
+          </small>
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+    <section id="dashboardSection" class="admin-section active">
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+
+          <div>
+            <span>Users</span>
+            <strong id="usersCount">0</strong>
+          </div>
+        </div>
+
+
+        <div class="stat-card">
+          <div class="stat-icon">📁</div>
+
+          <div>
+            <span>Projects</span>
+            <strong id="projectsCount">0</strong>
+          </div>
+        </div>
+
+
+        <div class="stat-card">
+          <div class="stat-icon">🎧</div>
+
+          <div>
+            <span>Tickets</span>
+            <strong id="ticketsCount">0</strong>
+          </div>
+        </div>
+
+
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+
+          <div>
+            <span>System</span>
+            <strong class="online">
+              Online
+            </strong>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="admin-grid">
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <div>
+              <h2>Recent Activity</h2>
+              <p>Latest platform activity</p>
+            </div>
+          </div>
+
+          <div id="recentActivity" class="activity-list">
+
+            <div class="empty-state">
+              Loading activity...
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <div>
+              <h2>System Status</h2>
+              <p>NOVA services</p>
+            </div>
+          </div>
+
+          <div class="status-list">
+
+            <div class="status-row">
+              <span>Supabase</span>
+              <b class="status-online">
+                ● Online
+              </b>
+            </div>
+
+            <div class="status-row">
+              <span>Database</span>
+              <b class="status-online">
+                ● Online
+              </b>
+            </div>
+
+            <div class="status-row">
+              <span>Authentication</span>
+              <b class="status-online">
+                ● Online
+              </b>
+            </div>
+
+            <div class="status-row">
+              <span>NOVA Guard</span>
+              <b class="status-online">
+                ● Active
+              </b>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- USERS -->
+    <section id="usersSection" class="admin-section">
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>Users</h2>
+            <p>All registered NOVA users</p>
+          </div>
+
+          <button class="refresh-btn" id="refreshUsers">
+            ↻ Refresh
+          </button>
+
+        </div>
+
+        <div class="table-container">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+
+            <tbody id="usersTable">
+
+              <tr>
+                <td colspan="5">
+                  Loading...
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROJECTS -->
+    <section id="projectsSection" class="admin-section">
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>Projects</h2>
+            <p>Projects created by users</p>
+          </div>
+
+          <button class="refresh-btn" id="refreshProjects">
+            ↻ Refresh
+          </button>
+
+        </div>
+
+        <div class="table-container">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>User ID</th>
+                <th>Type</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+
+            <tbody id="projectsTable">
+
+              <tr>
+                <td colspan="4">
+                  Loading...
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SUPPORT -->
+    <section id="ticketsSection" class="admin-section">
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>Support Tickets</h2>
+            <p>Manage customer support requests</p>
+          </div>
+
+          <button class="refresh-btn" id="refreshTickets">
+            ↻ Refresh
+          </button>
+
+        </div>
+
+        <div class="table-container">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>User</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+
+            <tbody id="ticketsTable">
+
+              <tr>
+                <td colspan="5">
+                  Loading...
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+    <section id="settingsSection" class="admin-section">
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>System Settings</h2>
+            <p>Platform configuration</p>
+          </div>
+
+        </div>
+
+        <div id="settingsContainer">
+
+          <div class="empty-state">
+            Loading settings...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- NOVA GUARD -->
+    <section id="guardSection" class="admin-section">
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>🛡️ NOVA Guard</h2>
+            <p>Security and AI protection settings</p>
+          </div>
+
+        </div>
+
+
+        <div class="guard-settings">
+
+          <label class="setting-row">
+
+            <div>
+              <strong>Guard Enabled</strong>
+              <span>
+                Enable NOVA protection system
+              </span>
+            </div>
+
+            <input
+              type="checkbox"
+              id="guardEnabled"
+            >
+
+          </label>
+
+
+          <label class="setting-row">
+
+            <div>
+              <strong>Prompt Protection</strong>
+              <span>
+                Protect against malicious prompts
+              </span>
+            </div>
+
+            <input
+              type="checkbox"
+              id="promptProtection"
+            >
+
+          </label>
+
+
+          <label class="setting-row">
+
+            <div>
+              <strong>Rate Limiting</strong>
+              <span>
+                Limit excessive API requests
+              </span>
+            </div>
+
+            <input
+              type="checkbox"
+              id="rateLimiting"
+            >
+
+          </label>
+
+
+          <label class="setting-row">
+
+            <div>
+              <strong>Content Filtering</strong>
+              <span>
+                Filter unsafe AI requests
+              </span>
+            </div>
+
+            <input
+              type="checkbox"
+              id="contentFiltering"
+            >
+
+          </label>
+
+
+          <div class="form-group">
+
+            <label>
+              Maximum Requests / Minute
+            </label>
+
+            <input
+              type="number"
+              id="maxRequestsPerMinute"
+              min="1"
+              max="10000"
+              value="60"
+            >
+
+          </div>
+
+
+          <button
+            id="saveGuard"
+            class="primary-btn"
+          >
+            Save NOVA Guard
+          </button>
+
+          <div
+            id="guardMessage"
+            class="form-message"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACTIVITY -->
+    <section id="activitySection" class="admin-section">
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>Activity Logs</h2>
+            <p>Recent platform events</p>
+          </div>
+
+        </div>
+
+        <div id="activityContainer">
+
+          <div class="empty-state">
+            Loading activity...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+
+  <script src="admin.js"></script>
+
+</body>
+</html>

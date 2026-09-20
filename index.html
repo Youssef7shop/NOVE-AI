@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="NOVA AI Studio — Your AI workspace"
+  >
+
+  <title>NOVA AI Studio</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+</head>
+
+
+<body>
+
+  <!-- =====================================
+       MOBILE MENU BUTTON
+  ====================================== -->
+
+  <button
+    id="menuButton"
+    class="mobile-menu-button"
+    type="button"
+    aria-label="Open menu"
+  >
+    ☰
+  </button>
+
+
+  <!-- =====================================
+       SIDEBAR
+  ====================================== -->
+
+  <aside class="sidebar">
+
+    <!-- LOGO -->
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        N
+      </div>
+
+      <div class="brand-text">
+
+        <strong>
+          NOVA
+        </strong>
+
+        <span>
+          AI STUDIO
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- NEW CHAT -->
+
+    <button
+      id="newChatButton"
+      class="new-chat-button"
+      type="button"
+    >
+      <span>
+        +
+      </span>
+
+      New Chat
+    </button>
+
+
+    <!-- WORKSPACE -->
+
+    <div class="sidebar-section">
+
+      <div class="sidebar-title">
+        WORKSPACE
+      </div>
+
+
+      <button
+        class="sidebar-item active"
+        data-tool="chat"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          ✦
+        </span>
+
+        <span>
+          AI Chat
+        </span>
+
+      </button>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="website"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          ◇
+        </span>
+
+        <span>
+          Website
+        </span>
+
+      </button>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="code"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          &lt;/&gt;
+        </span>
+
+        <span>
+          Code
+        </span>
+
+      </button>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="image"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          ◉
+        </span>
+
+        <span>
+          Image
+        </span>
+
+      </button>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="video"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          ▶
+        </span>
+
+        <span>
+          Video
+        </span>
+
+      </button>
+
+    </div>
+
+
+    <!-- LIBRARY -->
+
+    <div class="sidebar-section">
+
+      <div class="sidebar-title">
+        LIBRARY
+      </div>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="projects"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          ▣
+        </span>
+
+        <span>
+          Projects
+        </span>
+
+      </button>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="templates"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          □
+        </span>
+
+        <span>
+          Templates
+        </span>
+
+      </button>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="settings"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          ⚙
+        </span>
+
+        <span>
+          Settings
+        </span>
+
+      </button>
+
+
+      <button
+        class="sidebar-item"
+        data-tool="support"
+        type="button"
+      >
+
+        <span class="sidebar-icon">
+          ?
+        </span>
+
+        <span>
+          Support
+        </span>
+
+      </button>
+
+    </div>
+
+
+    <!-- USER AREA -->
+
+    <div class="sidebar-user">
+
+      <div
+        id="userAvatar"
+        class="user-avatar"
+      >
+        N
+      </div>
+
+
+      <div class="user-info">
+
+        <strong id="userName">
+          Guest
+        </strong>
+
+        <span id="userEmail">
+        </span>
+
+      </div>
+
+
+      <button
+        id="logoutButton"
+        class="logout-button"
+        type="button"
+        title="Logout"
+        style="display: none;"
+      >
+        ↪
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =====================================
+       MAIN
+  ====================================== -->
+
+  <main class="main-content">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <span class="topbar-title">
+          NOVA AI
+        </span>
+
+      </div>
+
+
+      <div class="topbar-right">
+
+        <button
+          id="loginOpen"
+          class="login-button"
+          type="button"
+        >
+          Login
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================
+         CONTENT
+    ====================================== -->
+
+    <div class="content">
+
+
+      <!-- WELCOME -->
+
+      <section class="welcome-section">
+
+        <div class="welcome-badge">
+          ✦ AI WORKSPACE
+        </div>
+
+
+        <h1>
+          What can I help you
+          <span>
+            create?
+          </span>
+        </h1>
+
+
+        <p>
+          Build websites, generate code,
+          create images, explore ideas
+          and work with NOVA AI.
+        </p>
+
+      </section>
+
+
+      <!-- QUICK ACTIONS -->
+
+      <section class="quick-actions">
+
+
+        <button
+          class="quick-card"
+          type="button"
+          data-prompt="Help me create a modern website"
+        >
+
+          <div class="quick-icon">
+            ◇
+          </div>
+
+          <div>
+
+            <strong>
+              Create a Website
+            </strong>
+
+            <p>
+              Build a modern website
+            </p>
+
+          </div>
+
+        </button>
+
+
+        <button
+          class="quick-card"
+          type="button"
+          data-prompt="Help me write and improve my code"
+        >
+
+          <div class="quick-icon">
+            &lt;/&gt;
+          </div>
+
+          <div>
+
+            <strong>
+              Generate Code
+            </strong>
+
+            <p>
+              Write and debug code
+            </p>
+
+          </div>
+
+        </button>
+
+
+        <button
+          class="quick-card"
+          type="button"
+          data-prompt="Create an image based on my idea"
+        >
+
+          <div class="quick-icon">
+            ◉
+          </div>
+
+          <div>
+
+            <strong>
+              Generate Image
+            </strong>
+
+            <p>
+              Turn ideas into visuals
+            </p>
+
+          </div>
+
+        </button>
+
+
+        <button
+          class="quick-card"
+          type="button"
+          data-prompt="Help me plan and build a project"
+        >
+
+          <div class="quick-icon">
+            ✦
+          </div>
+
+          <div>
+
+            <strong>
+              Start a Project
+            </strong>
+
+            <p>
+              Build your next project
+            </p>
+
+          </div>
+
+        </button>
+
+
+      </section>
+
+
+      <!-- =====================================
+           CHAT
+      ====================================== -->
+
+      <section class="chat-section">
+
+
+        <div
+          id="chatOutput"
+          class="chat-output"
+        >
+
+          <!-- Messages appear here -->
+
+        </div>
+
+
+        <div class="chat-box">
+
+
+          <textarea
+            id="chatInput"
+            placeholder="Message NOVA..."
+            rows="1"
+            autocomplete="off"
+          ></textarea>
+
+
+          <div class="chat-bottom">
+
+
+            <div class="chat-tools">
+
+              <button
+                type="button"
+                title="Attach file"
+              >
+                +
+              </button>
+
+              <span>
+                NOVA AI
+              </span>
+
+            </div>
+
+
+            <button
+              id="sendButton"
+              class="send-button"
+              type="button"
+              title="Send"
+            >
+              ↑
+            </button>
+
+
+          </div>
+
+        </div>
+
+
+        <p class="chat-disclaimer">
+          NOVA AI can make mistakes.
+          Check important information.
+        </p>
+
+      </section>
+
+
+    </div>
+
+  </main>
+
+
+  <!-- =====================================
+       AUTH MODAL
+  ====================================== -->
+
+  <div
+    id="loginModal"
+    class="modal"
+  >
+
+    <div class="modal-card">
+
+
+      <!-- CLOSE -->
+
+      <button
+        id="closeLogin"
+        class="modal-close"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+
+      <!-- AUTH HEADER -->
+
+      <div class="auth-header">
+
+        <div class="auth-logo">
+          N
+        </div>
+
+
+        <h2 id="authTitle">
+          Welcome back
+        </h2>
+
+
+        <p id="authSubtitle">
+          Login to NOVA AI Studio
+        </p>
+
+      </div>
+
+
+      <!-- AUTH FORM -->
+
+      <form
+        id="loginForm"
+        autocomplete="on"
+      >
+
+
+        <!-- Hidden auth mode -->
+
+        <input
+          type="hidden"
+          name="auth_mode"
+          value="login"
+        >
+
+
+        <!-- REGISTER FIELDS -->
+
+        <div
+          class="register-fields"
+          style="display: none;"
+        >
+
+
+          <!-- FIRST NAME -->
+
+          <div class="form-field">
+
+            <label for="firstName">
+              First Name
+            </label>
+
+            <input
+              id="firstName"
+              type="text"
+              name="first_name"
+              placeholder="Your first name"
+              autocomplete="given-name"
+            >
+
+          </div>
+
+
+          <!-- LAST NAME -->
+
+          <div class="form-field">
+
+            <label for="lastName">
+              Last Name
+            </label>
+
+            <input
+              id="lastName"
+              type="text"
+              name="last_name"
+              placeholder="Your last name"
+              autocomplete="family-name"
+            >
+
+          </div>
+
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <div class="form-field">
+
+          <label for="email">
+            Email
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="you@gmail.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <!-- PASSWORD -->
+
+        <div class="form-field">
+
+          <label for="password">
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            minlength="8"
+            required
+          >
+
+        </div>
+
+
+        <!-- CONFIRM PASSWORD -->
+
+        <div
+          class="form-field register-fields"
+          style="display: none;"
+        >
+
+          <label for="confirmPassword">
+            Confirm Password
+          </label>
+
+          <input
+            id="confirmPassword"
+            type="password"
+            name="confirm_password"
+            placeholder="Repeat your password"
+            autocomplete="new-password"
+            minlength="8"
+          >
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div
+          id="loginMessage"
+          class="auth-message"
+        ></div>
+
+
+        <!-- SUBMIT -->
+
+        <button
+          id="loginButton"
+          class="auth-submit"
+          type="submit"
+        >
+          Login
+        </button>
+
+
+        <!-- SWITCH -->
+
+        <div
+          id="authSwitch"
+          class="auth-switch"
+        >
+
+          Don't have an account?
+
+          <button
+            id="switchToRegister"
+            type="button"
+          >
+            Create Account
+          </button>
+
+        </div>
+
+
+      </form>
+
+
+      <!-- SECURITY -->
+
+      <div class="auth-security">
+
+        <span>
+          🔒
+        </span>
+
+        Your account is securely
+        managed by Supabase.
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================
+       SCRIPT
+  ====================================== -->
+
+  <script src="script.js"></script>
+
+</body>
+</html>
