@@ -1,195 +1,855 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
 
-<meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+    <title>Login — Niveau AI</title>
 
-<title>Login — Niveau AI</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<link rel="stylesheet" href="style.css">
+        body {
+            min-height: 100vh;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+            background:
+                radial-gradient(
+                    circle at 20% 10%,
+                    rgba(124, 92, 255, .20),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 80% 90%,
+                    rgba(0, 200, 255, .12),
+                    transparent 35%
+                ),
+                #07070b;
 
+            color: #fff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+        }
+
+        .auth-wrapper {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo {
+            width: 54px;
+            height: 54px;
+
+            margin: 0 auto 14px;
+
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 24px;
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #36d1ff
+                );
+
+            box-shadow:
+                0 15px 45px
+                rgba(124, 92, 255, .30);
+        }
+
+        .brand h1 {
+            font-size: 27px;
+            letter-spacing: -.7px;
+        }
+
+        .brand p {
+            margin-top: 7px;
+            color: #92929d;
+            font-size: 14px;
+        }
+
+        .card {
+            background: rgba(18, 18, 25, .90);
+
+            border: 1px solid
+                rgba(255, 255, 255, .08);
+
+            border-radius: 22px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 25px 80px
+                rgba(0, 0, 0, .45);
+
+            backdrop-filter: blur(20px);
+        }
+
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 7px;
+        }
+
+        .subtitle {
+            color: #8e8e99;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .social-buttons {
+            display: grid;
+            gap: 10px;
+        }
+
+        .social-btn {
+            width: 100%;
+            height: 46px;
+
+            border: 1px solid
+                rgba(255, 255, 255, .10);
+
+            background: #15151d;
+
+            color: #fff;
+
+            border-radius: 11px;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: .2s;
+        }
+
+        .social-btn:hover {
+            background: #1d1d27;
+            transform: translateY(-1px);
+        }
+
+        .social-icon {
+            font-size: 17px;
+            width: 22px;
+            text-align: center;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: #666673;
+
+            font-size: 12px;
+
+            margin: 22px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background:
+                rgba(255, 255, 255, .08);
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #d9d9df;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .field input {
+            width: 100%;
+            height: 48px;
+
+            padding: 0 14px;
+
+            border-radius: 11px;
+
+            border: 1px solid
+                rgba(255, 255, 255, .10);
+
+            background: #101017;
+
+            color: #fff;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: .2s;
+        }
+
+        .field input:focus {
+            border-color: #7c5cff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(124, 92, 255, .12);
+        }
+
+        .password-row {
+            position: relative;
+        }
+
+        .password-row input {
+            padding-right: 48px;
+        }
+
+        .show-password {
+            position: absolute;
+
+            right: 13px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: 0;
+            background: transparent;
+
+            color: #777784;
+
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+        .forgot {
+            display: block;
+
+            text-align: right;
+
+            margin-top: -7px;
+            margin-bottom: 18px;
+
+            color: #9b88ff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 49px;
+
+            border: 0;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c5cff,
+                    #5e8cff
+                );
+
+            color: #fff;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 12px 30px
+                rgba(124, 92, 255, .25);
+        }
+
+        .login-btn:disabled,
+        .social-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            display: none;
+
+            margin-bottom: 16px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.error {
+            color: #ffb4bd;
+
+            background:
+                rgba(255, 80, 100, .09);
+
+            border: 1px solid
+                rgba(255, 80, 100, .18);
+        }
+
+        .message.success {
+            color: #a8f0c5;
+
+            background:
+                rgba(50, 210, 120, .09);
+
+            border: 1px solid
+                rgba(50, 210, 120, .18);
+        }
+
+        .register-link {
+            text-align: center;
+
+            color: #8d8d98;
+
+            font-size: 13px;
+
+            margin-top: 22px;
+        }
+
+        .register-link a {
+            color: #a695ff;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .terms {
+            text-align: center;
+
+            color: #666672;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            margin-top: 20px;
+        }
+
+        .loader {
+            display: none;
+
+            width: 16px;
+            height: 16px;
+
+            border: 2px solid
+                rgba(255,255,255,.35);
+
+            border-top-color: #fff;
+
+            border-radius: 50%;
+
+            animation:
+                spin .7s linear infinite;
+        }
+
+        .loading .loader {
+            display: inline-block;
+        }
+
+        .loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 23px 18px;
+            }
+        }
+    </style>
 </head>
 
+<body>
 
-<body class="auth-body">
+<div class="auth-wrapper">
 
+    <div class="brand">
 
-<div class="auth-card">
+        <div class="logo">
+            N
+        </div>
 
-  <div class="auth-logo">
-    N
-  </div>
+        <h1>Niveau AI</h1>
 
-  <h1>Welcome back</h1>
+        <p>
+            Your intelligent workspace
+        </p>
 
-  <p class="auth-subtitle">
-    Sign in to continue to Niveau AI
-  </p>
-
-
-  <form id="loginForm">
-
-    <label>Email</label>
-
-    <input
-      id="loginEmail"
-      type="email"
-      placeholder="you@example.com"
-      required
-    >
+    </div>
 
 
-    <label>Password</label>
+    <div class="card">
 
-    <input
-      id="loginPassword"
-      type="password"
-      placeholder="••••••••"
-      required
-    >
+        <h2>
+            Welcome back
+        </h2>
 
-
-    <button
-      class="auth-button"
-      type="submit"
-    >
-      Login
-    </button>
-
-  </form>
+        <p class="subtitle">
+            Sign in to continue to Niveau AI.
+        </p>
 
 
-  <div class="divider">
-    <span>OR</span>
-  </div>
+        <div
+            id="message"
+            class="message"
+        ></div>
 
 
-  <button
-    id="googleLogin"
-    class="google-button"
-  >
-    Continue with Google
-  </button>
+        <!-- SOCIAL LOGIN -->
+
+        <div class="social-buttons">
+
+            <button
+                type="button"
+                class="social-btn"
+                id="googleBtn"
+            >
+                <span class="social-icon">G</span>
+                <span>Continue with Google</span>
+            </button>
 
 
-  <p
-    id="authMessage"
-    class="auth-message"
-  ></p>
+            <button
+                type="button"
+                class="social-btn"
+                id="facebookBtn"
+            >
+                <span class="social-icon">f</span>
+                <span>Continue with Facebook</span>
+            </button>
 
 
-  <p class="switch-auth">
+            <button
+                type="button"
+                class="social-btn"
+                id="appleBtn"
+            >
+                <span class="social-icon">●</span>
+                <span>Continue with Apple</span>
+            </button>
 
-    Don't have an account?
+        </div>
 
-    <a href="register.html">
-      Create account
-    </a>
 
-  </p>
+        <div class="divider">
+            OR CONTINUE WITH EMAIL
+        </div>
+
+
+        <!-- EMAIL LOGIN -->
+
+        <form id="loginForm">
+
+            <div class="field">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="you@example.com"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="password-row">
+
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        id="togglePassword"
+                        aria-label="Show password"
+                    >
+                        ◉
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="forgot-password.html"
+                class="forgot"
+            >
+                Forgot password?
+            </a>
+
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginBtn"
+            >
+
+                <span class="btn-text">
+                    Sign in
+                </span>
+
+                <span class="loader"></span>
+
+            </button>
+
+        </form>
+
+
+        <div class="register-link">
+
+            Don't have an account?
+
+            <a href="register.html">
+                Create account
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="terms">
+
+        By continuing, you agree to the
+        Niveau AI Terms of Service and Privacy Policy.
+
+    </div>
 
 </div>
 
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- AUTH -->
 
 <script src="auth.js"></script>
 
 
 <script>
 
-const form =
-  document.getElementById(
-    "loginForm"
-  );
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
 
-
-form.addEventListener(
-  "submit",
-  async (event) => {
-
-    event.preventDefault();
-
-
-    const email =
-      document.getElementById(
-        "loginEmail"
-      ).value;
-
-
-    const password =
-      document.getElementById(
-        "loginPassword"
-      ).value;
-
+    const loginBtn =
+        document.getElementById(
+            "loginBtn"
+        );
 
     const message =
-      document.getElementById(
-        "authMessage"
-      );
+        document.getElementById(
+            "message"
+        );
 
 
-    message.textContent =
-      "Logging in...";
+    function showMessage(
+        text,
+        type = "error"
+    ) {
 
+        message.textContent = text;
 
-    try {
-
-      await loginUser(
-        email,
-        password
-      );
-
-
-      window.location.href =
-        "index.html";
+        message.className =
+            `message show ${type}`;
 
     }
 
-    catch (error) {
 
-      message.textContent =
-        error.message;
+    function clearMessage() {
+
+        message.textContent = "";
+
+        message.className =
+            "message";
+
+    }
+
+
+    function setLoading(
+        loading
+    ) {
+
+        loginBtn.disabled =
+            loading;
+
+        loginBtn.classList.toggle(
+            "loading",
+            loading
+        );
 
     }
 
-  }
-);
+
+    /* =========================================
+       EMAIL LOGIN
+    ========================================= */
+
+    loginForm.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+            clearMessage();
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
 
 
-document
-  .getElementById("googleLogin")
-  .addEventListener(
-    "click",
-    async () => {
+            setLoading(true);
 
-      try {
 
-        await loginWithGoogle();
+            try {
 
-      }
+                await loginWithEmail(
+                    email,
+                    password
+                );
 
-      catch (error) {
 
-        document
-          .getElementById("authMessage")
-          .textContent =
-          error.message;
+                showMessage(
+                    "Login successful. Redirecting...",
+                    "success"
+                );
 
-      }
 
-    }
-  );
+                setTimeout(
+                    () => {
+
+                        window.location.href =
+                            "dashboard.html";
+
+                    },
+                    500
+                );
+
+
+            } catch (error) {
+
+                showMessage(
+                    error.message ||
+                    "Login failed."
+                );
+
+                setLoading(false);
+
+            }
+
+        }
+    );
+
+
+    /* =========================================
+       GOOGLE
+    ========================================= */
+
+    document
+        .getElementById("googleBtn")
+        .addEventListener(
+            "click",
+            async () => {
+
+                clearMessage();
+
+                try {
+
+                    await loginWithGoogle();
+
+                } catch (error) {
+
+                    showMessage(
+                        error.message
+                    );
+
+                }
+
+            }
+        );
+
+
+    /* =========================================
+       FACEBOOK
+    ========================================= */
+
+    document
+        .getElementById("facebookBtn")
+        .addEventListener(
+            "click",
+            async () => {
+
+                clearMessage();
+
+                try {
+
+                    await loginWithFacebook();
+
+                } catch (error) {
+
+                    showMessage(
+                        error.message
+                    );
+
+                }
+
+            }
+        );
+
+
+    /* =========================================
+       APPLE
+    ========================================= */
+
+    document
+        .getElementById("appleBtn")
+        .addEventListener(
+            "click",
+            async () => {
+
+                clearMessage();
+
+                try {
+
+                    await loginWithApple();
+
+                } catch (error) {
+
+                    showMessage(
+                        error.message
+                    );
+
+                }
+
+            }
+        );
+
+
+    /* =========================================
+       SHOW / HIDE PASSWORD
+    ========================================= */
+
+    document
+        .getElementById("togglePassword")
+        .addEventListener(
+            "click",
+            () => {
+
+                const input =
+                    document.getElementById(
+                        "password"
+                    );
+
+                input.type =
+                    input.type === "password"
+                        ? "text"
+                        : "password";
+
+            }
+        );
 
 </script>
 
 </body>
-
 </html>

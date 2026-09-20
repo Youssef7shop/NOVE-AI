@@ -1,620 +1,1470 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Niveau AI</title>
+    <meta charset="UTF-8">
 
-  <link rel="stylesheet" href="style.css">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Niveau AI - Your complete AI workspace"
+    >
+
+    <title>Niveau AI</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-  <!-- ================= SIDEBAR ================= -->
+<div class="app">
 
-  <aside class="sidebar">
 
-    <div class="brand">
-      <div class="logo-mark">N</div>
-      <span>Niveau AI</span>
-    </div>
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
 
-    <button class="new-chat" onclick="newChat()">
-      <span>＋</span>
-      New Chat
-    </button>
+    <aside class="sidebar" id="sidebar">
 
-    <nav class="navigation">
 
-      <button class="nav-item active" data-page="chat">
-        <span>◉</span>
-        Chat
-      </button>
+        <!-- BRAND -->
 
-      <button class="nav-item" data-page="image">
-        <span>▧</span>
-        Image
-      </button>
+        <div class="brand">
 
-      <button class="nav-item" data-page="video">
-        <span>▶</span>
-        Video
-      </button>
+            <div class="brand-logo">
+                N
+            </div>
 
-      <button class="nav-item" data-page="code">
-        <span>&lt;/&gt;</span>
-        Code
-      </button>
+            <div class="brand-info">
 
-      <button class="nav-item" data-page="website">
-        <span>⌘</span>
-        Websites
-      </button>
+                <strong>
+                    Niveau AI
+                </strong>
 
-      <button class="nav-item" data-page="projects">
-        <span>▦</span>
-        Projects
-      </button>
+                <span>
+                    AI Workspace
+                </span>
 
-      <button class="nav-item" data-page="planning">
-        <span>□</span>
-        Planning
-      </button>
+            </div>
 
-    </nav>
-
-    <div class="sidebar-bottom">
-
-      <button class="nav-item" data-page="upgrade">
-        <span>✦</span>
-        Upgrade
-      </button>
-
-      <button class="nav-item" data-page="settings">
-        <span>⚙</span>
-        Settings
-      </button>
-
-      <div class="user-mini" onclick="openProfile()">
-        <div class="avatar">H</div>
-
-        <div class="user-info">
-          <strong>Haytam</strong>
-          <small>Free Plan</small>
         </div>
 
-        <span>•••</span>
-      </div>
 
-    </div>
+        <!-- NEW CHAT -->
 
-  </aside>
+        <button
+            class="new-chat-btn"
+            id="newChatBtn"
+        >
 
+            <span>＋</span>
 
-  <!-- ================= MAIN ================= -->
+            <strong>
+                New Chat
+            </strong>
 
-  <main class="main">
-
-    <!-- TOPBAR -->
-
-    <header class="topbar">
-
-      <div class="mobile-menu" onclick="toggleSidebar()">
-        ☰
-      </div>
-
-      <div class="page-title">
-        <span id="pageTitle">Niveau AI</span>
-      </div>
-
-      <div class="top-actions">
-
-        <button class="icon-button" title="Notifications">
-          ♢
         </button>
 
-        <button class="profile-button" onclick="openProfile()">
-          <div class="avatar small">H</div>
-          <span>Haytam</span>
-        </button>
 
-      </div>
+        <!-- SEARCH -->
 
-    </header>
+        <div class="sidebar-search">
 
-
-    <!-- ================= CONTENT ================= -->
-
-    <section class="content">
-
-      <!-- CHAT PAGE -->
-
-      <div class="page active-page" id="chat-page">
-
-        <div class="welcome">
-
-          <div class="hero-logo">N</div>
-
-          <h1>How can I help you?</h1>
-
-          <p>
-            Create websites, write code, generate ideas and build projects
-            with Niveau AI.
-          </p>
-
-        </div>
-
-
-        <div class="suggestions">
-
-          <button onclick="useSuggestion('Create a modern website for my business')">
-            <span>🌐</span>
-            <strong>Create a website</strong>
-            <small>Build a complete website</small>
-          </button>
-
-          <button onclick="useSuggestion('Help me write JavaScript code')">
-            <span>💻</span>
-            <strong>Write code</strong>
-            <small>Build and debug code</small>
-          </button>
-
-          <button onclick="useSuggestion('Give me ideas for my business')">
-            <span>💡</span>
-            <strong>Get ideas</strong>
-            <small>Brainstorm anything</small>
-          </button>
-
-          <button onclick="useSuggestion('Create a social media campaign')">
-            <span>📱</span>
-            <strong>Social media</strong>
-            <small>Create content</small>
-          </button>
-
-        </div>
-
-
-        <div class="chat-wrapper">
-
-          <div class="messages" id="messages"></div>
-
-          <form class="chat-box" id="chatForm">
-
-            <button type="button" class="attach-button">
-              ＋
-            </button>
+            <span>⌕</span>
 
             <input
-              id="messageInput"
-              type="text"
-              placeholder="Message Niveau..."
-              autocomplete="off"
+                type="text"
+                id="chatSearch"
+                placeholder="Search chats..."
             >
 
-            <button type="button" class="voice-button">
-              ◉
+            <kbd>⌘ K</kbd>
+
+        </div>
+
+
+        <!-- MAIN NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+
+            <div class="nav-section-title">
+                WORKSPACE
+            </div>
+
+
+            <button
+                class="nav-item active"
+                data-page="chat"
+            >
+
+                <span class="nav-icon">
+                    ◈
+                </span>
+
+                <span>
+                    Chat
+                </span>
+
             </button>
 
-            <button class="send-button" type="submit">
-              ↑
+
+            <button
+                class="nav-item"
+                data-page="projects"
+            >
+
+                <span class="nav-icon">
+                    ◫
+                </span>
+
+                <span>
+                    Projects
+                </span>
+
             </button>
 
-          </form>
 
-          <div class="disclaimer">
-            Niveau AI can make mistakes. Check important information.
-          </div>
-
-        </div>
-
-      </div>
+            <div class="nav-section-title">
+                CREATE
+            </div>
 
 
-      <!-- IMAGE PAGE -->
+            <button
+                class="nav-item"
+                data-page="images"
+            >
 
-      <div class="page" id="image-page">
+                <span class="nav-icon">
+                    ▧
+                </span>
 
-        <div class="tool-header">
-          <h1>Image Studio</h1>
-          <p>Create and edit images with AI.</p>
-        </div>
+                <span>
+                    Images
+                </span>
 
-        <div class="generator-card">
+                <span class="nav-badge">
+                    AI
+                </span>
 
-          <textarea
-            placeholder="Describe the image you want to create..."
-          ></textarea>
-
-          <div class="generator-options">
-
-            <select>
-              <option>1024 × 1024</option>
-              <option>1536 × 1024</option>
-              <option>1024 × 1536</option>
-            </select>
-
-            <select>
-              <option>Realistic</option>
-              <option>Cinematic</option>
-              <option>3D</option>
-              <option>Anime</option>
-            </select>
-
-            <button onclick="demoGenerate('image')">
-              Generate Image
             </button>
 
-          </div>
 
-        </div>
+            <button
+                class="nav-item"
+                data-page="video"
+            >
 
-        <div class="empty-result">
-          <div>▧</div>
-          <h3>Your creations will appear here</h3>
-          <p>Describe what you want to generate.</p>
-        </div>
+                <span class="nav-icon">
+                    ▶
+                </span>
 
-      </div>
+                <span>
+                    Video
+                </span>
 
+                <span class="nav-badge">
+                    AI
+                </span>
 
-      <!-- VIDEO PAGE -->
-
-      <div class="page" id="video-page">
-
-        <div class="tool-header">
-          <h1>Video Studio</h1>
-          <p>Turn ideas into AI-powered videos.</p>
-        </div>
-
-        <div class="generator-card">
-
-          <textarea
-            placeholder="Describe your video..."
-          ></textarea>
-
-          <div class="generator-options">
-
-            <select>
-              <option>5 seconds</option>
-              <option>10 seconds</option>
-              <option>15 seconds</option>
-            </select>
-
-            <select>
-              <option>16:9</option>
-              <option>9:16</option>
-              <option>1:1</option>
-            </select>
-
-            <button onclick="demoGenerate('video')">
-              Generate Video
             </button>
 
-          </div>
 
-        </div>
+            <button
+                class="nav-item"
+                data-page="coding"
+            >
 
-        <div class="empty-result">
-          <div>▶</div>
-          <h3>Your videos will appear here</h3>
-          <p>Video generation will be connected later.</p>
-        </div>
+                <span class="nav-icon">
+                    &lt;/&gt;
+                </span>
 
-      </div>
+                <span>
+                    AI Coding
+                </span>
 
-
-      <!-- CODE PAGE -->
-
-      <div class="page" id="code-page">
-
-        <div class="tool-header">
-          <h1>Code Studio</h1>
-          <p>Build, explain and debug code.</p>
-        </div>
-
-        <div class="code-layout">
-
-          <div class="code-editor">
-
-            <div class="editor-top">
-              <span>index.html</span>
-              <button onclick="runCode()">▶ Run</button>
-            </div>
-
-            <textarea id="codeInput"><!DOCTYPE html>
-<html>
-<head>
-<title>Niveau Project</title>
-</head>
-
-<body>
-
-<h1>Hello Niveau AI</h1>
-
-<p>Start building your project.</p>
-
-</body>
-</html></textarea>
-
-          </div>
-
-          <div class="preview">
-
-            <div class="preview-top">
-              Live Preview
-            </div>
-
-            <iframe id="previewFrame"></iframe>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- WEBSITE PAGE -->
-
-      <div class="page" id="website-page">
-
-        <div class="tool-header">
-          <h1>Website Builder</h1>
-          <p>Describe a website and Niveau AI will help build it.</p>
-        </div>
-
-        <div class="website-builder">
-
-          <div class="builder-icon">
-            🌐
-          </div>
-
-          <h2>What do you want to build?</h2>
-
-          <textarea
-            placeholder="Example: Create a modern restaurant website with menu, gallery and contact section..."
-          ></textarea>
-
-          <button onclick="buildWebsite()">
-            ✦ Build Website
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <!-- PROJECTS PAGE -->
-
-      <div class="page" id="projects-page">
-
-        <div class="tool-header">
-
-          <div>
-            <h1>Projects</h1>
-            <p>Manage everything you're building.</p>
-          </div>
-
-          <button class="primary-button">
-            + New Project
-          </button>
-
-        </div>
-
-        <div class="projects-grid">
-
-          <div class="project-card">
-            <div class="project-icon">🌐</div>
-            <h3>My Website</h3>
-            <p>Website project</p>
-            <small>Updated today</small>
-          </div>
-
-          <div class="project-card">
-            <div class="project-icon">💻</div>
-            <h3>AI App</h3>
-            <p>Code project</p>
-            <small>Updated yesterday</small>
-          </div>
-
-          <div class="project-card new-project">
-            <div>＋</div>
-            <span>Create project</span>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- PLANNING PAGE -->
-
-      <div class="page" id="planning-page">
-
-        <div class="tool-header">
-          <h1>Planning</h1>
-          <p>Organize your projects and ideas.</p>
-        </div>
-
-        <div class="planning-board">
-
-          <div class="plan-column">
-            <h3>To Do</h3>
-
-            <div class="task">
-              Create website
-            </div>
-
-            <div class="task">
-              Design logo
-            </div>
-          </div>
-
-          <div class="plan-column">
-            <h3>In Progress</h3>
-
-            <div class="task">
-              Niveau AI UI
-            </div>
-          </div>
-
-          <div class="plan-column">
-            <h3>Done</h3>
-
-            <div class="task completed">
-              Project setup ✓
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- UPGRADE -->
-
-      <div class="page" id="upgrade-page">
-
-        <div class="tool-header center">
-          <h1>Choose your plan</h1>
-          <p>Unlock more powerful AI tools.</p>
-        </div>
-
-        <div class="plans">
-
-          <div class="plan">
-
-            <h2>Free</h2>
-
-            <div class="price">
-              $0
-              <small>/month</small>
-            </div>
-
-            <ul>
-              <li>✓ Basic AI Chat</li>
-              <li>✓ Limited projects</li>
-              <li>✓ Basic code tools</li>
-              <li>✓ Limited image generation</li>
-            </ul>
-
-            <button>
-              Current Plan
             </button>
 
-          </div>
 
+            <button
+                class="nav-item"
+                data-page="website"
+            >
 
-          <div class="plan featured">
+                <span class="nav-icon">
+                    ◎
+                </span>
 
-            <span class="popular">POPULAR</span>
+                <span>
+                    Website
+                </span>
 
-            <h2>Pro</h2>
-
-            <div class="price">
-              $9.99
-              <small>/month</small>
-            </div>
-
-            <ul>
-              <li>✓ Advanced AI</li>
-              <li>✓ More projects</li>
-              <li>✓ Website builder</li>
-              <li>✓ Image generation</li>
-              <li>✓ Video tools</li>
-            </ul>
-
-            <button>
-              Upgrade to Pro
             </button>
 
-          </div>
+
+            <button
+                class="nav-item"
+                data-page="pdf"
+            >
+
+                <span class="nav-icon">
+                    ▤
+                </span>
+
+                <span>
+                    PDF
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="documents"
+            >
+
+                <span class="nav-icon">
+                    ▧
+                </span>
+
+                <span>
+                    Documents
+                </span>
+
+            </button>
+
+
+            <div class="nav-section-title">
+                PUBLISH
+            </div>
+
+
+            <button
+                class="nav-item"
+                data-page="publishing"
+            >
+
+                <span class="nav-icon">
+                    ↗
+                </span>
+
+                <span>
+                    Publishing
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                data-page="planning"
+            >
+
+                <span class="nav-icon">
+                    ◷
+                </span>
+
+                <span>
+                    Planning
+                </span>
+
+            </button>
+
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+
+            <!-- PLAN -->
+
+            <div class="plan-card">
+
+                <div class="plan-header">
+
+                    <div>
+
+                        <span class="plan-label">
+                            CURRENT PLAN
+                        </span>
+
+                        <strong id="planName">
+                            Free
+                        </strong>
+
+                    </div>
+
+                    <span class="plan-icon">
+                        ✦
+                    </span>
+
+                </div>
+
+
+                <div class="usage-text">
+
+                    <span>
+                        AI usage
+                    </span>
+
+                    <strong id="usageText">
+                        0 / 20
+                    </strong>
+
+                </div>
+
+
+                <div class="usage-bar">
+
+                    <div
+                        class="usage-progress"
+                        id="usageProgress"
+                        style="width:0%"
+                    ></div>
+
+                </div>
+
+
+                <button
+                    class="upgrade-btn"
+                    id="upgradeBtn"
+                >
+                    Upgrade plan
+                </button>
+
+            </div>
+
+
+            <!-- USER -->
+
+            <button
+                class="user-profile"
+                id="profileButton"
+            >
+
+                <div
+                    class="user-avatar"
+                    id="userAvatar"
+                >
+                    U
+                </div>
+
+
+                <div class="user-details">
+
+                    <strong id="userName">
+                        User
+                    </strong>
+
+                    <span id="userEmail">
+                        Login required
+                    </span>
+
+                </div>
+
+
+                <span class="user-more">
+                    ⋮
+                </span>
+
+            </button>
+
 
         </div>
 
-      </div>
+
+    </aside>
 
 
-      <!-- SETTINGS -->
+    <!-- =========================================
+         MAIN
+    ========================================== -->
 
-      <div class="page" id="settings-page">
+    <main class="main">
 
-        <div class="tool-header">
-          <h1>Settings</h1>
-          <p>Manage your Niveau AI account.</p>
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+
+            <button
+                class="mobile-menu"
+                id="mobileMenuBtn"
+            >
+                ☰
+            </button>
+
+
+            <div class="topbar-title">
+
+                <h2 id="pageTitle">
+                    Chat
+                </h2>
+
+                <span
+                    class="connection-status"
+                    id="connectionStatus"
+                >
+                    <i></i>
+                    Connected
+                </span>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+
+                <button
+                    class="topbar-btn"
+                    id="searchBtn"
+                    title="Search"
+                >
+                    ⌕
+                </button>
+
+
+                <button
+                    class="topbar-btn"
+                    id="themeBtn"
+                    title="Theme"
+                >
+                    ◐
+                </button>
+
+
+                <button
+                    class="topbar-btn"
+                    id="settingsBtn"
+                    title="Settings"
+                >
+                    ⚙
+                </button>
+
+
+                <button
+                    class="topbar-avatar"
+                    id="topbarAvatar"
+                >
+                    U
+                </button>
+
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================
+             CONTENT
+        ====================================== -->
+
+        <div class="content">
+
+
+            <!-- =================================
+                 CHAT PAGE
+            ================================== -->
+
+            <section
+                class="page active"
+                id="page-chat"
+            >
+
+
+                <div class="chat-welcome">
+
+
+                    <div class="welcome-logo">
+                        ✦
+                    </div>
+
+
+                    <h1>
+                        What can I help you create?
+                    </h1>
+
+
+                    <p>
+                        Chat, code, create images,
+                        build websites and more.
+                    </p>
+
+
+                    <div class="quick-tools">
+
+
+                        <button
+                            class="quick-tool"
+                            data-prompt="Create a professional website for my business"
+                        >
+
+                            <span>
+                                🌐
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Build a website
+                                </strong>
+
+                                <small>
+                                    Create a complete website
+                                </small>
+
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="quick-tool"
+                            data-prompt="Help me write and improve my code"
+                        >
+
+                            <span>
+                                💻
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    AI Coding
+                                </strong>
+
+                                <small>
+                                    Write and debug code
+                                </small>
+
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="quick-tool"
+                            data-prompt="Create an image concept for me"
+                        >
+
+                            <span>
+                                🎨
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Create Image
+                                </strong>
+
+                                <small>
+                                    Generate visual ideas
+                                </small>
+
+                            </div>
+
+                        </button>
+
+
+                        <button
+                            class="quick-tool"
+                            data-prompt="Help me plan my project"
+                        >
+
+                            <span>
+                                📋
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Plan a project
+                                </strong>
+
+                                <small>
+                                    Organize your work
+                                </small>
+
+                            </div>
+
+                        </button>
+
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- MESSAGES -->
+
+                <div
+                    class="messages"
+                    id="messages"
+                ></div>
+
+
+                <!-- COMPOSER -->
+
+                <div class="composer-wrapper">
+
+
+                    <form
+                        class="composer"
+                        id="chatForm"
+                    >
+
+
+                        <button
+                            type="button"
+                            class="composer-tool"
+                            id="attachBtn"
+                            title="Attach"
+                        >
+                            ＋
+                        </button>
+
+
+                        <textarea
+                            id="messageInput"
+                            rows="1"
+                            placeholder="Message Niveau AI..."
+                        ></textarea>
+
+
+                        <button
+                            type="button"
+                            class="composer-tool"
+                            id="imageToolBtn"
+                            title="Image"
+                        >
+                            ◉
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="composer-tool"
+                            id="codeToolBtn"
+                            title="Code"
+                        >
+                            &lt;/&gt;
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="send-btn"
+                            id="sendBtn"
+                        >
+                            ↑
+                        </button>
+
+
+                    </form>
+
+
+                    <div class="composer-footer">
+
+                        <span>
+                            Niveau AI can make mistakes.
+                            Check important information.
+                        </span>
+
+                        <span>
+                            <kbd>Enter</kbd>
+                            to send
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+            <!-- =================================
+                 PROJECTS
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-projects"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            WORKSPACE
+                        </span>
+
+                        <h1>
+                            Projects
+                        </h1>
+
+                        <p>
+                            Keep your AI work organized
+                            in one place.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        class="primary-btn"
+                        id="newProjectBtn"
+                    >
+                        ＋ New Project
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="projects-grid"
+                    id="projectsGrid"
+                >
+
+
+                    <div class="empty-state">
+
+                        <div>
+                            ◫
+                        </div>
+
+                        <h3>
+                            No projects yet
+                        </h3>
+
+                        <p>
+                            Create your first project
+                            and start building.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 IMAGES
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-images"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            AI CREATION
+                        </span>
+
+                        <h1>
+                            Images
+                        </h1>
+
+                        <p>
+                            Create images from your ideas.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tool-workspace">
+
+
+                    <div class="tool-icon">
+                        🎨
+                    </div>
+
+
+                    <h2>
+                        AI Image Studio
+                    </h2>
+
+
+                    <p>
+                        Describe the image you want
+                        to create.
+                    </p>
+
+
+                    <div class="tool-input">
+
+                        <textarea
+                            placeholder="Describe your image..."
+                        ></textarea>
+
+                        <button class="primary-btn">
+                            Generate Image
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 VIDEO
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-video"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            AI CREATION
+                        </span>
+
+                        <h1>
+                            Video
+                        </h1>
+
+                        <p>
+                            Create videos from prompts
+                            and ideas.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tool-workspace">
+
+
+                    <div class="tool-icon">
+                        🎬
+                    </div>
+
+
+                    <h2>
+                        AI Video Studio
+                    </h2>
+
+
+                    <p>
+                        Turn your idea into a video.
+                    </p>
+
+
+                    <div class="tool-input">
+
+                        <textarea
+                            placeholder="Describe your video..."
+                        ></textarea>
+
+                        <button class="primary-btn">
+                            Create Video
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 CODING
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-coding"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            DEVELOPMENT
+                        </span>
+
+                        <h1>
+                            AI Coding
+                        </h1>
+
+                        <p>
+                            Build applications with AI.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="coding-layout">
+
+
+                    <div class="code-sidebar">
+
+                        <button class="code-new-btn">
+                            ＋ New file
+                        </button>
+
+                        <div class="code-files">
+
+                            <div class="code-file active">
+                                index.html
+                            </div>
+
+                            <div class="code-file">
+                                style.css
+                            </div>
+
+                            <div class="code-file">
+                                app.js
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="code-editor">
+
+
+                        <div class="editor-header">
+
+                            <span>
+                                index.html
+                            </span>
+
+                            <button>
+                                Run
+                            </button>
+
+                        </div>
+
+
+                        <textarea
+                            id="codeEditor"
+                            spellcheck="false"
+                            placeholder="Write your code here..."
+                        ></textarea>
+
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 WEBSITE
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-website"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            BUILD
+                        </span>
+
+                        <h1>
+                            Website Builder
+                        </h1>
+
+                        <p>
+                            Describe the website
+                            you want to build.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tool-workspace">
+
+                    <div class="tool-icon">
+                        🌐
+                    </div>
+
+                    <h2>
+                        Build a website with AI
+                    </h2>
+
+                    <p>
+                        Tell Niveau AI what you want.
+                    </p>
+
+                    <div class="tool-input">
+
+                        <textarea
+                            placeholder="Example: Build a modern website for a Moroccan clothing store..."
+                        ></textarea>
+
+                        <button class="primary-btn">
+                            Start Building
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 PDF
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-pdf"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            DOCUMENTS
+                        </span>
+
+                        <h1>
+                            PDF
+                        </h1>
+
+                        <p>
+                            Upload and work with PDF files.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="upload-area">
+
+                    <div class="upload-icon">
+                        📄
+                    </div>
+
+                    <h3>
+                        Drop your PDF here
+                    </h3>
+
+                    <p>
+                        or choose a file from your computer
+                    </p>
+
+                    <button class="primary-btn">
+                        Choose PDF
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 DOCUMENTS
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-documents"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            DOCUMENTS
+                        </span>
+
+                        <h1>
+                            Documents
+                        </h1>
+
+                        <p>
+                            Create and manage your documents.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="empty-state large">
+
+                    <div>
+                        📝
+                    </div>
+
+                    <h3>
+                        Your documents
+                    </h3>
+
+                    <p>
+                        Create your first document
+                        with AI.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 PUBLISHING
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-publishing"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            PUBLISH
+                        </span>
+
+                        <h1>
+                            Publishing
+                        </h1>
+
+                        <p>
+                            Prepare and publish your content.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="empty-state large">
+
+                    <div>
+                        ↗
+                    </div>
+
+                    <h3>
+                        Publishing workspace
+                    </h3>
+
+                    <p>
+                        Your publishing tools will
+                        appear here.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================
+                 PLANNING
+            ================================== -->
+
+            <section
+                class="page"
+                id="page-planning"
+            >
+
+                <div class="page-header">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            PRODUCTIVITY
+                        </span>
+
+                        <h1>
+                            Planning
+                        </h1>
+
+                        <p>
+                            Plan projects, tasks and ideas.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="empty-state large">
+
+                    <div>
+                        ◷
+                    </div>
+
+                    <h3>
+                        Planning workspace
+                    </h3>
+
+                    <p>
+                        Create your next plan with AI.
+                    </p>
+
+                </div>
+
+            </section>
+
+
         </div>
 
-        <div class="settings-card">
 
-          <div class="setting-row">
+    </main>
+
+
+    <!-- =========================================
+         PROFILE MENU
+    ========================================== -->
+
+    <div
+        class="profile-menu"
+        id="profileMenu"
+    >
+
+
+        <div class="profile-menu-header">
+
+            <div
+                class="profile-menu-avatar"
+                id="menuAvatar"
+            >
+                U
+            </div>
+
+
             <div>
-              <strong>Appearance</strong>
-              <p>Choose how Niveau AI looks.</p>
+
+                <strong id="menuUserName">
+                    User
+                </strong>
+
+                <span id="menuUserEmail">
+                    user@example.com
+                </span>
+
             </div>
-
-            <select id="themeSelect">
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
-          </div>
-
-          <div class="setting-row">
-            <div>
-              <strong>Language</strong>
-              <p>Interface language.</p>
-            </div>
-
-            <select>
-              <option>English</option>
-              <option>Français</option>
-              <option>العربية</option>
-            </select>
-          </div>
 
         </div>
 
-      </div>
 
-    </section>
-
-  </main>
+        <div class="profile-menu-divider"></div>
 
 
-  <!-- ================= PROFILE MODAL ================= -->
+        <button
+            class="profile-menu-item"
+            id="profileMenuItem"
+        >
+            👤
+            Profile
+        </button>
 
-  <div class="modal hidden" id="profileModal">
 
-    <div class="modal-card">
+        <button
+            class="profile-menu-item"
+            id="settingsMenuItem"
+        >
+            ⚙
+            Settings
+        </button>
 
-      <button class="close-modal" onclick="closeProfile()">
-        ×
-      </button>
 
-      <div class="profile-avatar">
-        H
-      </div>
+        <button
+            class="profile-menu-item"
+            id="billingMenuItem"
+        >
+            ✦
+            Plans & Billing
+        </button>
 
-      <h2>Haytam</h2>
-      <p>haytam@example.com</p>
 
-      <div class="profile-plan">
-        Free Plan
-      </div>
+        <div class="profile-menu-divider"></div>
 
-      <button class="primary-button">
-        Manage account
-      </button>
 
-      <button class="logout-button">
-        Log out
-      </button>
+        <button
+            class="profile-menu-item danger"
+            id="logoutBtn"
+        >
+            ↪
+            Log out
+        </button>
+
 
     </div>
 
-  </div>
+
+    <!-- =========================================
+         SETTINGS MODAL
+    ========================================== -->
+
+    <div
+        class="modal-overlay"
+        id="settingsModal"
+    >
 
 
-  <script src="script.js"></script>
+        <div class="modal">
+
+
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ACCOUNT
+                    </span>
+
+                    <h2>
+                        Settings
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="modal-close"
+                    id="closeSettings"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="settings-profile">
+
+
+                <div
+                    class="settings-avatar"
+                    id="settingsAvatar"
+                >
+                    U
+                </div>
+
+
+                <div>
+
+                    <strong id="settingsName">
+                        User
+                    </strong>
+
+                    <span id="settingsEmail">
+                        user@example.com
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-row">
+
+                <div>
+
+                    <strong>
+                        Current plan
+                    </strong>
+
+                    <span>
+                        Your current Niveau AI plan
+                    </span>
+
+                </div>
+
+                <strong id="settingsPlan">
+                    Free
+                </strong>
+
+            </div>
+
+
+            <div class="settings-row">
+
+                <div>
+
+                    <strong>
+                        Appearance
+                    </strong>
+
+                    <span>
+                        Change the interface theme
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="secondary-btn"
+                    id="settingsThemeBtn"
+                >
+                    Toggle theme
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="auth.js"></script>
+<script src="app.js"></script>
 
 </body>
+
 </html>
