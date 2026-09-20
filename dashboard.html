@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOVA — Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">NOVA<span>.</span></div>
+
+    <nav>
+      <button class="nav-item active">⌂ <span>Dashboard</span></button>
+      <button class="nav-item">✦ <span>AI Tools</span></button>
+      <button class="nav-item">▣ <span>Projects</span></button>
+      <button class="nav-item">⚙ <span>Settings</span></button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="support-btn">💬 Support</button>
+      <button id="logoutBtn" class="logout-btn">↪ Logout</button>
+    </div>
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome back to NOVA.</p>
+      </div>
+
+      <div class="profile-mini">
+        <div id="avatar" class="avatar">N</div>
+
+        <div>
+          <strong id="userName">Loading...</strong>
+          <small id="userEmail">Loading...</small>
+        </div>
+      </div>
+    </header>
+
+
+    <section class="welcome-card">
+      <div>
+        <span class="badge">NOVA AI</span>
+        <h2>Create something amazing.</h2>
+        <p>
+          Build websites, generate code and manage your projects
+          from one powerful workspace.
+        </p>
+
+        <button id="newProjectBtn" class="primary-btn">
+          + New Project
+        </button>
+      </div>
+
+      <div class="welcome-icon">✦</div>
+    </section>
+
+
+    <section class="stats">
+
+      <div class="stat-card">
+        <span>Projects</span>
+        <strong id="projectCount">0</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>AI Usage</span>
+        <strong id="usageCount">0</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Account</span>
+        <strong>Active</strong>
+      </div>
+
+    </section>
+
+
+    <section class="projects-section">
+
+      <div class="section-header">
+        <div>
+          <h2>Your Projects</h2>
+          <p>Projects created with NOVA.</p>
+        </div>
+
+        <button id="newProjectBtn2" class="secondary-btn">
+          + New Project
+        </button>
+      </div>
+
+      <div id="projectsContainer" class="projects-grid">
+
+        <div class="loading">
+          Loading projects...
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- NEW PROJECT MODAL -->
+
+  <div id="projectModal" class="modal hidden">
+
+    <div class="modal-box">
+
+      <button id="closeModal" class="close-btn">×</button>
+
+      <h2>Create New Project</h2>
+      <p>Start a new project inside NOVA.</p>
+
+      <form id="projectForm">
+
+        <label>Project name</label>
+
+        <input
+          id="projectName"
+          type="text"
+          placeholder="My awesome project"
+          required
+        >
+
+        <label>Description</label>
+
+        <textarea
+          id="projectDescription"
+          placeholder="Describe your project..."
+        ></textarea>
+
+        <button type="submit" class="primary-btn">
+          Create Project
+        </button>
+
+      </form>
+
+      <div id="formMessage"></div>
+
+    </div>
+
+  </div>
+
+
+  <script src="dashboard.js"></script>
+
+</body>
+</html>
