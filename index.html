@@ -4,235 +4,610 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>NOVA AI</title>
+  <title>Niveau AI</title>
 
   <link rel="stylesheet" href="style.css">
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
 
-  <div class="background"></div>
+  <!-- ================= SIDEBAR ================= -->
 
-  <header class="navbar">
+  <aside class="sidebar">
 
-    <div class="logo">
-      <span>✦</span>
-      NOVA
+    <div class="brand">
+      <div class="logo-mark">N</div>
+      <span>Niveau AI</span>
     </div>
 
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#features">Features</a>
-      <a href="#about">About</a>
+    <button class="new-chat" onclick="newChat()">
+      <span>＋</span>
+      New Chat
+    </button>
+
+    <nav class="navigation">
+
+      <button class="nav-item active" data-page="chat">
+        <span>◉</span>
+        Chat
+      </button>
+
+      <button class="nav-item" data-page="image">
+        <span>▧</span>
+        Image
+      </button>
+
+      <button class="nav-item" data-page="video">
+        <span>▶</span>
+        Video
+      </button>
+
+      <button class="nav-item" data-page="code">
+        <span>&lt;/&gt;</span>
+        Code
+      </button>
+
+      <button class="nav-item" data-page="website">
+        <span>⌘</span>
+        Websites
+      </button>
+
+      <button class="nav-item" data-page="projects">
+        <span>▦</span>
+        Projects
+      </button>
+
+      <button class="nav-item" data-page="planning">
+        <span>□</span>
+        Planning
+      </button>
+
     </nav>
 
-    <div class="nav-actions">
-      <button class="btn secondary" onclick="openAuth('login')">
-        Login
+    <div class="sidebar-bottom">
+
+      <button class="nav-item" data-page="upgrade">
+        <span>✦</span>
+        Upgrade
       </button>
 
-      <button class="btn primary" onclick="openAuth('register')">
-        Get Started
+      <button class="nav-item" data-page="settings">
+        <span>⚙</span>
+        Settings
       </button>
+
+      <div class="user-mini" onclick="openProfile()">
+        <div class="avatar">H</div>
+
+        <div class="user-info">
+          <strong>Haytam</strong>
+          <small>Free Plan</small>
+        </div>
+
+        <span>•••</span>
+      </div>
+
     </div>
 
-  </header>
+  </aside>
 
 
-  <main>
+  <!-- ================= MAIN ================= -->
 
-    <section id="home" class="hero">
+  <main class="main">
 
-      <div class="badge">
-        ✦ AI PLATFORM
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+      <div class="mobile-menu" onclick="toggleSidebar()">
+        ☰
       </div>
 
-      <h1>
-        Build with the power
-        <span>of AI.</span>
-      </h1>
+      <div class="page-title">
+        <span id="pageTitle">Niveau AI</span>
+      </div>
 
-      <p>
-        Create websites, generate code, work with AI,
-        manage projects and build your ideas from one powerful platform.
-      </p>
+      <div class="top-actions">
 
-      <div class="hero-buttons">
-
-        <button class="btn primary big" onclick="openAuth('register')">
-          Start Creating
+        <button class="icon-button" title="Notifications">
+          ♢
         </button>
 
-        <button class="btn secondary big" onclick="openAuth('login')">
-          Sign In
+        <button class="profile-button" onclick="openProfile()">
+          <div class="avatar small">H</div>
+          <span>Haytam</span>
         </button>
 
       </div>
 
-    </section>
+    </header>
 
 
-    <section id="features" class="features">
+    <!-- ================= CONTENT ================= -->
 
-      <div class="section-title">
-        <small>NOVA PLATFORM</small>
+    <section class="content">
 
-        <h2>
-          Everything you need.
-        </h2>
+      <!-- CHAT PAGE -->
 
-        <p>
-          One platform for your AI-powered workflow.
-        </p>
+      <div class="page active-page" id="chat-page">
+
+        <div class="welcome">
+
+          <div class="hero-logo">N</div>
+
+          <h1>How can I help you?</h1>
+
+          <p>
+            Create websites, write code, generate ideas and build projects
+            with Niveau AI.
+          </p>
+
+        </div>
+
+
+        <div class="suggestions">
+
+          <button onclick="useSuggestion('Create a modern website for my business')">
+            <span>🌐</span>
+            <strong>Create a website</strong>
+            <small>Build a complete website</small>
+          </button>
+
+          <button onclick="useSuggestion('Help me write JavaScript code')">
+            <span>💻</span>
+            <strong>Write code</strong>
+            <small>Build and debug code</small>
+          </button>
+
+          <button onclick="useSuggestion('Give me ideas for my business')">
+            <span>💡</span>
+            <strong>Get ideas</strong>
+            <small>Brainstorm anything</small>
+          </button>
+
+          <button onclick="useSuggestion('Create a social media campaign')">
+            <span>📱</span>
+            <strong>Social media</strong>
+            <small>Create content</small>
+          </button>
+
+        </div>
+
+
+        <div class="chat-wrapper">
+
+          <div class="messages" id="messages"></div>
+
+          <form class="chat-box" id="chatForm">
+
+            <button type="button" class="attach-button">
+              ＋
+            </button>
+
+            <input
+              id="messageInput"
+              type="text"
+              placeholder="Message Niveau..."
+              autocomplete="off"
+            >
+
+            <button type="button" class="voice-button">
+              ◉
+            </button>
+
+            <button class="send-button" type="submit">
+              ↑
+            </button>
+
+          </form>
+
+          <div class="disclaimer">
+            Niveau AI can make mistakes. Check important information.
+          </div>
+
+        </div>
+
       </div>
 
 
-      <div class="feature-grid">
+      <!-- IMAGE PAGE -->
 
-        <div class="feature-card">
-          <div class="icon">✦</div>
-          <h3>AI Chat</h3>
-          <p>
-            Talk with your AI assistant and work on your ideas.
-          </p>
+      <div class="page" id="image-page">
+
+        <div class="tool-header">
+          <h1>Image Studio</h1>
+          <p>Create and edit images with AI.</p>
         </div>
 
+        <div class="generator-card">
 
-        <div class="feature-card">
-          <div class="icon">⌘</div>
-          <h3>Code</h3>
-          <p>
-            Generate and improve code for your projects.
-          </p>
+          <textarea
+            placeholder="Describe the image you want to create..."
+          ></textarea>
+
+          <div class="generator-options">
+
+            <select>
+              <option>1024 × 1024</option>
+              <option>1536 × 1024</option>
+              <option>1024 × 1536</option>
+            </select>
+
+            <select>
+              <option>Realistic</option>
+              <option>Cinematic</option>
+              <option>3D</option>
+              <option>Anime</option>
+            </select>
+
+            <button onclick="demoGenerate('image')">
+              Generate Image
+            </button>
+
+          </div>
+
         </div>
 
-
-        <div class="feature-card">
-          <div class="icon">▣</div>
-          <h3>Websites</h3>
-          <p>
-            Create websites from simple instructions.
-          </p>
-        </div>
-
-
-        <div class="feature-card">
-          <div class="icon">◈</div>
-          <h3>Projects</h3>
-          <p>
-            Keep your work organized in one place.
-          </p>
+        <div class="empty-result">
+          <div>▧</div>
+          <h3>Your creations will appear here</h3>
+          <p>Describe what you want to generate.</p>
         </div>
 
       </div>
 
-    </section>
+
+      <!-- VIDEO PAGE -->
+
+      <div class="page" id="video-page">
+
+        <div class="tool-header">
+          <h1>Video Studio</h1>
+          <p>Turn ideas into AI-powered videos.</p>
+        </div>
+
+        <div class="generator-card">
+
+          <textarea
+            placeholder="Describe your video..."
+          ></textarea>
+
+          <div class="generator-options">
+
+            <select>
+              <option>5 seconds</option>
+              <option>10 seconds</option>
+              <option>15 seconds</option>
+            </select>
+
+            <select>
+              <option>16:9</option>
+              <option>9:16</option>
+              <option>1:1</option>
+            </select>
+
+            <button onclick="demoGenerate('video')">
+              Generate Video
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="empty-result">
+          <div>▶</div>
+          <h3>Your videos will appear here</h3>
+          <p>Video generation will be connected later.</p>
+        </div>
+
+      </div>
 
 
-    <section id="about" class="about">
+      <!-- CODE PAGE -->
 
-      <small>WHY NOVA</small>
+      <div class="page" id="code-page">
 
-      <h2>
-        Your ideas.
-        <span>One AI.</span>
-      </h2>
+        <div class="tool-header">
+          <h1>Code Studio</h1>
+          <p>Build, explain and debug code.</p>
+        </div>
 
-      <p>
-        NOVA is designed to become a complete AI workspace
-        where people can create, develop and manage their digital projects.
-      </p>
+        <div class="code-layout">
+
+          <div class="code-editor">
+
+            <div class="editor-top">
+              <span>index.html</span>
+              <button onclick="runCode()">▶ Run</button>
+            </div>
+
+            <textarea id="codeInput"><!DOCTYPE html>
+<html>
+<head>
+<title>Niveau Project</title>
+</head>
+
+<body>
+
+<h1>Hello Niveau AI</h1>
+
+<p>Start building your project.</p>
+
+</body>
+</html></textarea>
+
+          </div>
+
+          <div class="preview">
+
+            <div class="preview-top">
+              Live Preview
+            </div>
+
+            <iframe id="previewFrame"></iframe>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- WEBSITE PAGE -->
+
+      <div class="page" id="website-page">
+
+        <div class="tool-header">
+          <h1>Website Builder</h1>
+          <p>Describe a website and Niveau AI will help build it.</p>
+        </div>
+
+        <div class="website-builder">
+
+          <div class="builder-icon">
+            🌐
+          </div>
+
+          <h2>What do you want to build?</h2>
+
+          <textarea
+            placeholder="Example: Create a modern restaurant website with menu, gallery and contact section..."
+          ></textarea>
+
+          <button onclick="buildWebsite()">
+            ✦ Build Website
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- PROJECTS PAGE -->
+
+      <div class="page" id="projects-page">
+
+        <div class="tool-header">
+
+          <div>
+            <h1>Projects</h1>
+            <p>Manage everything you're building.</p>
+          </div>
+
+          <button class="primary-button">
+            + New Project
+          </button>
+
+        </div>
+
+        <div class="projects-grid">
+
+          <div class="project-card">
+            <div class="project-icon">🌐</div>
+            <h3>My Website</h3>
+            <p>Website project</p>
+            <small>Updated today</small>
+          </div>
+
+          <div class="project-card">
+            <div class="project-icon">💻</div>
+            <h3>AI App</h3>
+            <p>Code project</p>
+            <small>Updated yesterday</small>
+          </div>
+
+          <div class="project-card new-project">
+            <div>＋</div>
+            <span>Create project</span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PLANNING PAGE -->
+
+      <div class="page" id="planning-page">
+
+        <div class="tool-header">
+          <h1>Planning</h1>
+          <p>Organize your projects and ideas.</p>
+        </div>
+
+        <div class="planning-board">
+
+          <div class="plan-column">
+            <h3>To Do</h3>
+
+            <div class="task">
+              Create website
+            </div>
+
+            <div class="task">
+              Design logo
+            </div>
+          </div>
+
+          <div class="plan-column">
+            <h3>In Progress</h3>
+
+            <div class="task">
+              Niveau AI UI
+            </div>
+          </div>
+
+          <div class="plan-column">
+            <h3>Done</h3>
+
+            <div class="task completed">
+              Project setup ✓
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- UPGRADE -->
+
+      <div class="page" id="upgrade-page">
+
+        <div class="tool-header center">
+          <h1>Choose your plan</h1>
+          <p>Unlock more powerful AI tools.</p>
+        </div>
+
+        <div class="plans">
+
+          <div class="plan">
+
+            <h2>Free</h2>
+
+            <div class="price">
+              $0
+              <small>/month</small>
+            </div>
+
+            <ul>
+              <li>✓ Basic AI Chat</li>
+              <li>✓ Limited projects</li>
+              <li>✓ Basic code tools</li>
+              <li>✓ Limited image generation</li>
+            </ul>
+
+            <button>
+              Current Plan
+            </button>
+
+          </div>
+
+
+          <div class="plan featured">
+
+            <span class="popular">POPULAR</span>
+
+            <h2>Pro</h2>
+
+            <div class="price">
+              $9.99
+              <small>/month</small>
+            </div>
+
+            <ul>
+              <li>✓ Advanced AI</li>
+              <li>✓ More projects</li>
+              <li>✓ Website builder</li>
+              <li>✓ Image generation</li>
+              <li>✓ Video tools</li>
+            </ul>
+
+            <button>
+              Upgrade to Pro
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- SETTINGS -->
+
+      <div class="page" id="settings-page">
+
+        <div class="tool-header">
+          <h1>Settings</h1>
+          <p>Manage your Niveau AI account.</p>
+        </div>
+
+        <div class="settings-card">
+
+          <div class="setting-row">
+            <div>
+              <strong>Appearance</strong>
+              <p>Choose how Niveau AI looks.</p>
+            </div>
+
+            <select id="themeSelect">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <div>
+              <strong>Language</strong>
+              <p>Interface language.</p>
+            </div>
+
+            <select>
+              <option>English</option>
+              <option>Français</option>
+              <option>العربية</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
 
     </section>
 
   </main>
 
 
-  <!-- AUTH MODAL -->
+  <!-- ================= PROFILE MODAL ================= -->
 
-  <div id="authModal" class="modal hidden">
+  <div class="modal hidden" id="profileModal">
 
-    <div class="modal-box">
+    <div class="modal-card">
 
-      <button class="close" onclick="closeAuth()">
+      <button class="close-modal" onclick="closeProfile()">
         ×
       </button>
 
-      <div class="auth-logo">
-        ✦
+      <div class="profile-avatar">
+        H
       </div>
 
-      <h2 id="authTitle">
-        Create your account
-      </h2>
+      <h2>Haytam</h2>
+      <p>haytam@example.com</p>
 
-      <p id="authDescription">
-        Start building with NOVA.
-      </p>
+      <div class="profile-plan">
+        Free Plan
+      </div>
 
+      <button class="primary-button">
+        Manage account
+      </button>
 
-      <form id="authForm">
-
-        <div id="nameFields" class="name-fields">
-
-          <input
-            id="firstName"
-            type="text"
-            placeholder="First name"
-          >
-
-          <input
-            id="lastName"
-            type="text"
-            placeholder="Last name"
-          >
-
-        </div>
-
-
-        <input
-          id="email"
-          type="email"
-          placeholder="Gmail / Email"
-          required
-        >
-
-
-        <input
-          id="password"
-          type="password"
-          placeholder="Password"
-          required
-        >
-
-
-        <button class="btn primary auth-button">
-          <span id="authButtonText">
-            Create account
-          </span>
-        </button>
-
-      </form>
-
-
-      <div id="authMessage"></div>
-
-
-      <p class="switch-auth">
-
-        <span id="switchText">
-          Already have an account?
-        </span>
-
-        <button onclick="switchAuth()">
-          <span id="switchButton">
-            Login
-          </span>
-        </button>
-
-      </p>
+      <button class="logout-button">
+        Log out
+      </button>
 
     </div>
 

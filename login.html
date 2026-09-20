@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>Login — Niveau AI</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+
+<body class="auth-body">
+
+
+<div class="auth-card">
+
+  <div class="auth-logo">
+    N
+  </div>
+
+  <h1>Welcome back</h1>
+
+  <p class="auth-subtitle">
+    Sign in to continue to Niveau AI
+  </p>
+
+
+  <form id="loginForm">
+
+    <label>Email</label>
+
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="you@example.com"
+      required
+    >
+
+
+    <label>Password</label>
+
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="••••••••"
+      required
+    >
+
+
+    <button
+      class="auth-button"
+      type="submit"
+    >
+      Login
+    </button>
+
+  </form>
+
+
+  <div class="divider">
+    <span>OR</span>
+  </div>
+
+
+  <button
+    id="googleLogin"
+    class="google-button"
+  >
+    Continue with Google
+  </button>
+
+
+  <p
+    id="authMessage"
+    class="auth-message"
+  ></p>
+
+
+  <p class="switch-auth">
+
+    Don't have an account?
+
+    <a href="register.html">
+      Create account
+    </a>
+
+  </p>
+
+</div>
+
+
+<script src="auth.js"></script>
+
+
+<script>
+
+const form =
+  document.getElementById(
+    "loginForm"
+  );
+
+
+form.addEventListener(
+  "submit",
+  async (event) => {
+
+    event.preventDefault();
+
+
+    const email =
+      document.getElementById(
+        "loginEmail"
+      ).value;
+
+
+    const password =
+      document.getElementById(
+        "loginPassword"
+      ).value;
+
+
+    const message =
+      document.getElementById(
+        "authMessage"
+      );
+
+
+    message.textContent =
+      "Logging in...";
+
+
+    try {
+
+      await loginUser(
+        email,
+        password
+      );
+
+
+      window.location.href =
+        "index.html";
+
+    }
+
+    catch (error) {
+
+      message.textContent =
+        error.message;
+
+    }
+
+  }
+);
+
+
+document
+  .getElementById("googleLogin")
+  .addEventListener(
+    "click",
+    async () => {
+
+      try {
+
+        await loginWithGoogle();
+
+      }
+
+      catch (error) {
+
+        document
+          .getElementById("authMessage")
+          .textContent =
+          error.message;
+
+      }
+
+    }
+  );
+
+</script>
+
+</body>
+
+</html>

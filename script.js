@@ -1,255 +1,234 @@
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+/* =====================================================
+   NIVEAU AI
+   Frontend MVP
+   ===================================================== */
 
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
 
+/* ================= NAVIGATION ================= */
 
-let authMode = "register";
+const navItems = document.querySelectorAll(".nav-item");
+const pages = document.querySelectorAll(".page");
 
+navItems.forEach(item => {
 
-function openAuth(mode) {
+  item.addEventListener("click", () => {
 
-  authMode = mode;
+    const page = item.dataset.page;
 
-  document
-    .getElementById("authModal")
-    .classList.remove("hidden");
+    if (!page) return;
 
-  updateAuthUI();
-}
+    navItems.forEach(button => {
+      button.classList.remove("active");
+    });
 
+    item.classList.add("active");
 
-function closeAuth() {
+    pages.forEach(p => {
+      p.classList.remove("active-page");
+    });
 
-  document
-    .getElementById("authModal")
-    .classList.add("hidden");
+    const selectedPage =
+      document.getElementById(`${page}-page`);
 
-  document
-    .getElementById("authMessage")
-    .textContent = "";
-}
-
-
-function switchAuth() {
-
-  authMode =
-    authMode === "register"
-      ? "login"
-      : "register";
-
-  updateAuthUI();
-}
-
-
-function updateAuthUI() {
-
-  const register =
-    authMode === "register";
-
-  document.getElementById("authTitle").textContent =
-    register
-      ? "Create your account"
-      : "Welcome back";
-
-  document.getElementById("authDescription").textContent =
-    register
-      ? "Start building with NOVA."
-      : "Login to your NOVA workspace.";
-
-  document.getElementById("nameFields")
-    .style.display =
-    register
-      ? "grid"
-      : "none";
-
-  document.getElementById("authButtonText")
-    .textContent =
-    register
-      ? "Create account"
-      : "Login";
-
-  document.getElementById("switchText")
-    .textContent =
-    register
-      ? "Already have an account?"
-      : "Don't have an account?";
-
-  document.getElementById("switchButton")
-    .textContent =
-    register
-      ? "Login"
-      : "Create account";
-}
-
-
-document
-  .getElementById("authForm")
-  .addEventListener(
-    "submit",
-    async function(event) {
-
-      event.preventDefault();
-
-      const message =
-        document.getElementById(
-          "authMessage"
-        );
-
-      message.textContent = "Loading...";
-      message.style.color = "#999";
-
-
-      const email =
-        document.getElementById(
-          "email"
-        ).value.trim();
-
-      const password =
-        document.getElementById(
-          "password"
-        ).value;
-
-
-      try {
-
-        if (authMode === "register") {
-
-          const firstName =
-            document.getElementById(
-              "firstName"
-            ).value.trim();
-
-          const lastName =
-            document.getElementById(
-              "lastName"
-            ).value.trim();
-
-
-          if (!firstName || !lastName) {
-
-            throw new Error(
-              "Enter your first and last name."
-            );
-
-          }
-
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth
-              .signUp({
-
-                email,
-
-                password,
-
-                options: {
-
-                  data: {
-
-                    first_name:
-                      firstName,
-
-                    last_name:
-                      lastName
-
-                  }
-
-                }
-
-              });
-
-
-          if (error)
-            throw error;
-
-
-          message.style.color =
-            "#4ade80";
-
-          message.textContent =
-            "Account created. Check your email to confirm your account.";
-
-        }
-
-
-        else {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth
-              .signInWithPassword({
-
-                email,
-
-                password
-
-              });
-
-
-          if (error)
-            throw error;
-
-
-          message.style.color =
-            "#4ade80";
-
-          message.textContent =
-            "Login successful.";
-
-          setTimeout(
-            () => {
-
-              window.location.href =
-                "dashboard.html";
-
-            },
-            700
-          );
-
-        }
-
-
-      }
-
-      catch (error) {
-
-        message.style.color =
-          "#f87171";
-
-        message.textContent =
-          error.message;
-
-      }
-
+    if (selectedPage) {
+      selectedPage.classList.add("active-page");
     }
+
+    const titles = {
+      chat: "Niveau AI",
+      image: "Image Studio",
+      video: "Video Studio",
+      code: "Code Studio",
+      website: "Website Builder",
+      projects: "Projects",
+      planning: "Planning",
+      upgrade: "Plans",
+      settings: "Settings"
+    };
+
+    document.getElementById("pageTitle").textContent =
+      titles[page] || "Niveau AI";
+
+    closeSidebar();
+
+  });
+
+});
+
+
+/* ================= SIDEBAR MOBILE ================= */
+
+function toggleSidebar() {
+
+  const sidebar =
+    document.querySelector(".sidebar");
+
+  sidebar.classList.toggle("open");
+
+}
+
+function closeSidebar() {
+
+  const sidebar =
+    document.querySelector(".sidebar");
+
+  sidebar.classList.remove("open");
+
+}
+
+
+/* ================= CHAT ================= */
+
+const chatForm =
+  document.getElementById("chatForm");
+
+const messageInput =
+  document.getElementById("messageInput");
+
+const messages =
+  document.getElementById("messages");
+
+
+chatForm.addEventListener("submit", function(event) {
+
+  event.preventDefault();
+
+  const message =
+    messageInput.value.trim();
+
+  if (!message) return;
+
+  addMessage(message, "user");
+
+  messageInput.value = "";
+
+  setTimeout(() => {
+
+    const response =
+      generateDemoResponse(message);
+
+    addMessage(response, "ai");
+
+  }, 600);
+
+});
+
+
+function addMessage(text, type) {
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    `message ${type}`;
+
+  div.textContent = text;
+
+  messages.appendChild(div);
+
+  messages.scrollTop =
+    messages.scrollHeight;
+
+}
+
+
+function generateDemoResponse(message) {
+
+  const lower =
+    message.toLowerCase();
+
+  if (lower.includes("website") ||
+      lower.includes("site") ||
+      lower.includes("موقع")) {
+
+    return "Great! I can help you build that website. In the next version, this chat will be connected to the AI backend and will generate the actual project files.";
+
+  }
+
+  if (lower.includes("code") ||
+      lower.includes("كود")) {
+
+    return "I can help you write and debug code. The Code Studio is ready for the next backend integration.";
+
+  }
+
+  if (lower.includes("image") ||
+      lower.includes("صورة")) {
+
+    return "Image generation will be connected to an AI image provider in the next version.";
+
+  }
+
+  return "I'm Niveau AI. This is the frontend MVP. Next we'll connect me to Gemini so I can generate real AI responses.";
+
+}
+
+
+function useSuggestion(text) {
+
+  messageInput.value = text;
+
+  messageInput.focus();
+
+}
+
+
+function newChat() {
+
+  messages.innerHTML = "";
+
+  messageInput.value = "";
+
+  addMessage(
+    "New conversation started. How can I help?",
+    "ai"
   );
 
-
-async function checkUser() {
-
-  const {
-    data: {
-      session
-    }
-  } =
-    await supabaseClient.auth
-      .getSession();
+}
 
 
-  if (session) {
+/* ================= CODE PREVIEW ================= */
 
-    console.log(
-      "Logged in:",
-      session.user.email
+function runCode() {
+
+  const code =
+    document.getElementById("codeInput").value;
+
+  const frame =
+    document.getElementById("previewFrame");
+
+  frame.srcdoc = code;
+
+}
+
+
+/* ================= WEBSITE BUILDER ================= */
+
+function buildWebsite() {
+
+  alert(
+    "Website Builder demo ready. Next we'll connect it to the AI backend to generate real HTML, CSS and JavaScript."
+  );
+
+}
+
+
+/* ================= IMAGE / VIDEO ================= */
+
+function demoGenerate(type) {
+
+  if (type === "image") {
+
+    alert(
+      "Image generation is currently a frontend demo. We will connect the AI API later."
+    );
+
+  }
+
+  if (type === "video") {
+
+    alert(
+      "Video generation will be connected to a video AI provider later."
     );
 
   }
@@ -257,4 +236,105 @@ async function checkUser() {
 }
 
 
-checkUser();
+/* ================= PROFILE ================= */
+
+function openProfile() {
+
+  document
+    .getElementById("profileModal")
+    .classList.remove("hidden");
+
+}
+
+
+function closeProfile() {
+
+  document
+    .getElementById("profileModal")
+    .classList.add("hidden");
+
+}
+
+
+/* ================= THEME ================= */
+
+const themeSelect =
+  document.getElementById("themeSelect");
+
+themeSelect.addEventListener(
+  "change",
+  function() {
+
+    if (this.value === "light") {
+
+      document.documentElement.style.setProperty(
+        "--bg",
+        "#f5f6f8"
+      );
+
+      document.documentElement.style.setProperty(
+        "--sidebar",
+        "#ffffff"
+      );
+
+      document.documentElement.style.setProperty(
+        "--card",
+        "#ffffff"
+      );
+
+      document.documentElement.style.setProperty(
+        "--text",
+        "#15161a"
+      );
+
+      document.documentElement.style.setProperty(
+        "--muted",
+        "#666b78"
+      );
+
+    } else {
+
+      document.documentElement.style.setProperty(
+        "--bg",
+        "#090a0f"
+      );
+
+      document.documentElement.style.setProperty(
+        "--sidebar",
+        "#0d0e13"
+      );
+
+      document.documentElement.style.setProperty(
+        "--card",
+        "#12141b"
+      );
+
+      document.documentElement.style.setProperty(
+        "--text",
+        "#f4f5f7"
+      );
+
+      document.documentElement.style.setProperty(
+        "--muted",
+        "#9499a8"
+      );
+
+    }
+
+  }
+);
+
+
+/* ================= STARTUP ================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    addMessage(
+      "Welcome to Niveau AI. What would you like to create?",
+      "ai"
+    );
+
+  }
+);
