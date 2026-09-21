@@ -77,8 +77,8 @@ userInput.addEventListener('keypress', (e) => {
 // ==========================================
 // 1. إعداد Supabase (حط الروابط ديال مشروعك هنا)
 // ==========================================
-const supabaseUrl = 'YOUR_SUPABASE_PROJECT_URL'; 
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = 'https://qerdrkhjmcussgfkwflo.supabase.co'; 
+const supabaseAnonKey = 'sb_publishable_a0u7Sm3eSqg0N8i_49B52w_g44TrK_D';
 const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 // ==========================================
