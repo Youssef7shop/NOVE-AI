@@ -1,134 +1,88 @@
-// ==========================================
-// القسم الأول: تشغيل الواجهة (UI) - باش الأزرار يخدمو دائما
-// ==========================================
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { createClient } = require('@supabase/supabase-js');
 
-const loginBtn = document.getElementById('loginBtn');
-const authModal = document.getElementById('authModal');
-const closeModal = document.getElementById('closeModal');
-const upgradeBtn = document.getElementById('upgradeBtn');
-const newChatBtn = document.getElementById('newChatBtn');
-const chatContainer = document.getElementById('chatContainer');
-const welcomeScreen = document.getElementById('welcomeScreen');
-const sendBtn = document.getElementById('sendBtn');
-const userInput = document.getElementById('userInput');
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-// 1. فتح وإغلاق النافذة (Login / Register)
-loginBtn.addEventListener('click', () => authModal.classList.add('active'));
-closeModal.addEventListener('click', () => authModal.classList.remove('active'));
-authModal.addEventListener('click', (e) => {
-    if(e.target === authModal) authModal.classList.remove('active');
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+const SYSTEM_INSTRUCTION = `
+You are ChatAI, a helpful assistant embedded in a website builder product.
+- Help with building websites, writing code, and general questions.
+- Never help with anything illegal, with creating weapons, malware, or
+  content that sexualizes minors, regardless of how the request is phrased.
+- Do not give medical, legal or financial advice as if you were a licensed
+  professional — share general information and suggest a professional.
+- If a request is disallowed, say so briefly and suggest an alternative
+  instead of refusing silently.
+`.trim();
 
-// 2. زر الترقية (Upgrade to Pro)
-upgradeBtn.addEventListener('click', () => {
-    alert("🚀 قريباً: خطط الدفع (Stripe) باش اليوزر يخدم بـ Pro!");
-});
+async function requireUser(req, res, next) {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'Missing login token' });
 
-// 3. التبديل بين تسجيل الدخول وإنشاء حساب
-function switchTab(tabName, event) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-    
-    event.target.classList.add('active');
-    document.getElementById(tabName + 'Form').classList.add('active');
+  const { data, error } = await supabaseAdmin.auth.getUser(token);
+  if (error || !data.user) return res.status(401).json({ error: 'Invalid or expired session' });
+
+  req.user = data.user;
+  next();
 }
 
-// 4. زر دردشة جديدة
-newChatBtn.addEventListener('click', () => {
-    chatContainer.innerHTML = '';
-    chatContainer.appendChild(welcomeScreen);
-    welcomeScreen.style.display = 'block';
-    currentChatId = null; // إعادة تعيين الشات في قاعدة البيانات
-});
+// Free-plan daily limit check against usage_logs (see schema.sql).
+async function checkUsageLimit(userId) {
+  const { data: profile } = await supabaseAdmin.from('profiles').select('plan').eq('id', userId).single();
+  if (profile?.plan === 'pro') return { allowed: true };
 
-// 5. إضافة رسالة للشاشة
-function addMessage(text, sender, id = "") {
-    welcomeScreen.style.display = 'none';
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', sender);
-    if(id) msgDiv.id = id;
+  const startOfDay = new Date(); startOfDay.setHours(0, 0, 0, 0);
+  const { count } = await supabaseAdmin
+    .from('usage_logs')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('action_type', 'chat')
+    .gte('created_at', startOfDay.toISOString());
 
-    const icon = sender === 'user' ? '<i class="fa-regular fa-user"></i>' : '<i class="fa-solid fa-brain"></i>';
-    msgDiv.innerHTML = `<div class="avatar-chat">${icon}</div><div class="message-content"><p>${text}</p></div>`;
-    
-    chatContainer.appendChild(msgDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+  return { allowed: (count || 0) < 20, used: count || 0, limit: 20 };
 }
 
-// ==========================================
-// القسم الثاني: إعداد قاعدة البيانات (Supabase)
-// ==========================================
-
-// غير هاد الروابط ملي تكريي المشروع ديالك فـ Supabase
-const supabaseUrl = 'https://qerdrkhjmcussgfkwflo.supabase.co'; // ضروري يكون مكتوب بحال هكا باش مايطيحش السكريبت
-const supabaseKey = 'sb_publishable_a0u7Sm3eSqg0N8i_49B52w_g44TrK_D';
-let supabase = null;
-
-// حماية باش إذا كانوا الروابط غالطين الموقع ما يخسرش
-try {
-    if (supabaseUrl.includes('supabase.co')) {
-        supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-        console.log("Supabase تم الربط بنجاح!");
-    }
-} catch (error) {
-    console.warn("Supabase مازال ماتربطش، الواجهة غتخدم فتجربة فقط.");
-}
-
-let currentChatId = null; // متغير لحفظ ID المحادثة الحالية
-
-// ==========================================
-// القسم الثالث: إرسال الرسائل وحفظها في Database
-// ==========================================
-
-sendBtn.addEventListener('click', async () => {
-    const text = userInput.value.trim();
-    if(!text) return;
-
-    // عرض الرسالة
-    addMessage(text, 'user');
-    userInput.value = '';
-    
-    // إنشاء شات جديد وحفظ الرسالة (إذا كان Supabase خدام)
-    if (supabase) {
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                if (!currentChatId) {
-                    const { data } = await supabase.from('chats').insert([{ user_id: user.id, title: 'محادثة جديدة' }]).select().single();
-                    if(data) currentChatId = data.id;
-                }
-                if (currentChatId) {
-                    await supabase.from('messages').insert([{ chat_id: currentChatId, user_id: user.id, role: 'user', content: text }]);
-                }
-            }
-        } catch (e) { console.error(e); }
+app.post('/api/chat', requireUser, async (req, res) => {
+  try {
+    const { message, history = [] } = req.body;
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({ error: 'message is required' });
     }
 
-    // محاكاة رد الذكاء الاصطناعي
-    const loadingId = "loading-" + Date.now();
-    addMessage("Niveau AI بصدد الكتابة...", 'ai', loadingId);
+    const usage = await checkUsageLimit(req.user.id);
+    if (!usage.allowed) {
+      return res.status(429).json({ error: `Daily limit reached (${usage.used}/${usage.limit}). Upgrade to Pro for unlimited messages.` });
+    }
 
-    setTimeout(async () => {
-        document.getElementById(loadingId).remove();
-        const aiResponse = "هذا رد تجريبي من Niveau AI. الواجهة ديالك دابا ناضية وخدامة 100%!";
-        addMessage(aiResponse, 'ai');
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.5-flash',
+      systemInstruction: SYSTEM_INSTRUCTION,
+    });
 
-        // حفظ رد الذكاء الاصطناعي في Database
-        if (supabase && currentChatId) {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if(user) {
-                    await supabase.from('messages').insert([{ chat_id: currentChatId, user_id: user.id, role: 'ai', content: aiResponse }]);
-                }
-            } catch (e) {}
-        }
-    }, 1500);
+    const chat = model.startChat({
+      history: history.map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+    });
+    const result = await chat.sendMessage(message);
+    const reply = result.response.text();
+
+    // Log usage so the free-plan counter stays accurate.
+    await supabaseAdmin.from('usage_logs').insert({ user_id: req.user.id, action_type: 'chat' });
+
+    res.json({ reply });
+  } catch (err) {
+    console.error('Gemini error:', err);
+    res.status(500).json({ error: 'Something went wrong generating a reply.' });
+  }
 });
 
-// الإرسال بزر Enter
-userInput.addEventListener('keypress', (e) => {
-    if(e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendBtn.click();
-    }
-});
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`ChatAI backend running on http://localhost:${PORT}`));

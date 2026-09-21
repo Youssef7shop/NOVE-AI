@@ -1,108 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Niveau AI</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- مكتبة Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ChatAI</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ef9857'/%3E%3Cpath d='M9 12h14M9 16h14M9 20h9' stroke='%2315151a' stroke-width='2.3' stroke-linecap='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="app-container">
-        <!-- القائمة الجانبية -->
-        <aside class="sidebar">
-            <div class="brand">
-                <i class="fa-solid fa-brain"></i>
-                <h2>Niveau AI</h2>
-            </div>
-            
-            <button class="new-chat-btn" id="newChatBtn">
-                <i class="fa-solid fa-plus"></i> New Chat
-            </button>
 
-            <nav class="menu">
-                <a href="#" class="active"><i class="fa-regular fa-comment"></i> Chat</a>
-                <a href="#"><i class="fa-regular fa-image"></i> Image Generation</a>
-                <a href="#"><i class="fa-solid fa-video"></i> Video Create</a>
-                <a href="#"><i class="fa-solid fa-code"></i> Codes & Scripts</a>
-                <a href="#"><i class="fa-regular fa-folder"></i> Projects</a>
-                <a href="#"><i class="fa-regular fa-calendar-check"></i> Planification</a>
-            </nav>
+<!-- Icon sprite: every icon used in this app, defined once -->
+<svg style="display:none" aria-hidden="true">
+<defs>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.4"/><path d="M21 16l-5.2-5.2-3.6 3.6-2.2-2.2L4 17.5"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.5 3.8 6 3.8 9s-1.4 6.5-3.8 9c-2.4-2.5-3.8-6-3.8-9s1.4-6.5 3.8-9z"/></symbol>
+  <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="4" width="4.6" height="16" rx="1"/><rect x="9.7" y="4" width="4.6" height="10" rx="1"/><rect x="16.4" y="4" width="4.6" height="13" rx="1"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="M9 8l-5 4 5 4M15 8l5 4-5 4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 8.6a4.6 4.6 0 0 0-7.8-3.3L12 6.3l-1-1a4.6 4.6 0 0 0-7.8 3.3c0 1.6.7 2.9 1.8 4L12 19l7-6.4c1.1-1.1 1.8-2.4 1.8-4z"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></symbol>
+</defs>
+</svg>
 
-            <div class="sidebar-bottom">
-                <div class="upgrade-plan" id="upgradeBtn">
-                    <i class="fa-solid fa-bolt"></i>
-                    <div>
-                        <strong>Upgrade to Pro</strong>
-                        <span>Get GPT-4 & Faster images</span>
-                    </div>
-                </div>
-                
-                <div class="profile-btn" id="loginBtn">
-                    <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                    <span>Login / Register</span>
-                </div>
-            </div>
-        </aside>
+<div class="app-shell">
 
-        <!-- مساحة الدردشة -->
-        <main class="chat-main">
-            <header class="mobile-header">
-                <i class="fa-solid fa-bars menu-toggle"></i>
-                <h2>Niveau AI</h2>
-            </header>
-
-            <div class="chat-container" id="chatContainer">
-                <div class="welcome-screen" id="welcomeScreen">
-                    <h1>كيفاش نقدر نعاونك اليوم؟</h1>
-                    <p>أنا Niveau AI، نقدر نكتب كود، نصاوب صور، ونعاونك فمشاريعك.</p>
-                </div>
-            </div>
-
-            <div class="input-container">
-                <div class="input-box">
-                    <textarea id="userInput" placeholder="Message Niveau AI..." rows="1"></textarea>
-                    <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
-                </div>
-                <p class="disclaimer">Niveau AI can make mistakes. Consider verifying important information.</p>
-            </div>
-        </main>
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">A</span>
+      <span class="brand-wordmark">ChatAI</span>
     </div>
 
-    <!-- نافذة تسجيل الدخول / إنشاء حساب -->
-    <div class="modal-overlay" id="authModal">
-        <div class="auth-box">
-            <button class="close-modal" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
-            
-            <div class="auth-tabs">
-                <button class="tab active" onclick="switchTab('login', event)">تسجيل الدخول</button>
-                <button class="tab" onclick="switchTab('register', event)">إنشاء حساب</button>
-            </div>
+    <div class="sidebar-newchat-wrap">
+      <button class="btn btn-secondary btn-block" onclick="newChat()">
+        <svg class="icon icon-sm"><use href="#i-plus"/></svg> New chat
+      </button>
+    </div>
 
-            <div id="loginForm" class="auth-form active">
-                <button id="googleLogin" class="social-btn google"><i class="fa-brands fa-google"></i> Continue with Google</button>
-                
-                <div class="divider"><span>أو</span></div>
-                
-                <input type="email" id="loginEmail" placeholder="Email address" class="auth-input">
-                <input type="password" id="loginPassword" placeholder="Password" class="auth-input">
-                <button id="submitLogin" class="main-auth-btn">تسجيل الدخول</button>
-            </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button class="nav-item active" data-view="chat" onclick="switchView('chat')">
+        <svg class="icon"><use href="#i-chat"/></svg> Chat
+      </button>
+      <div class="sidebar-history" id="historyList">
+        <button class="history-item" onclick="loadHistoryDemo('Landing page for a coffee roastery')">Landing page for a coffee roastery</button>
+        <button class="history-item" onclick="loadHistoryDemo('Fix my Supabase login bug')">Fix my Supabase login bug</button>
+        <button class="history-item" onclick="loadHistoryDemo('Ideas for the Explore feed')">Ideas for the Explore feed</button>
+      </div>
 
-            <div id="registerForm" class="auth-form">
-                <div class="name-inputs">
-                    <input type="text" id="regFirstName" placeholder="الاسم" class="auth-input">
-                    <input type="text" id="regLastName" placeholder="النسب" class="auth-input">
-                </div>
-                <input type="email" id="regEmail" placeholder="Email address" class="auth-input">
-                <input type="password" id="regPassword" placeholder="Password" class="auth-input">
-                <button id="submitRegister" class="main-auth-btn">إنشاء حساب</button>
+      <div class="nav-section-label">Create</div>
+      <button class="nav-item" data-view="image" onclick="switchView('image')">
+        <svg class="icon"><use href="#i-image"/></svg> Images &amp; video
+      </button>
+      <button class="nav-item" data-view="explore" onclick="switchView('explore')">
+        <svg class="icon"><use href="#i-globe"/></svg> Explore
+      </button>
+      <button class="nav-item" data-view="planning" onclick="switchView('planning')">
+        <svg class="icon"><use href="#i-layout"/></svg> Planning
+      </button>
+      <button class="nav-item" data-view="projects" onclick="switchView('projects')">
+        <svg class="icon"><use href="#i-folder"/></svg> Projects
+      </button>
+      <button class="nav-item" data-view="code" onclick="switchView('code')">
+        <svg class="icon"><use href="#i-code"/></svg> Code
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="upgrade-banner">
+        <p><strong style="color:var(--text-primary)">Free plan</strong> — <span id="usageMiniText">6/20</span> messages used today</p>
+        <button class="btn btn-primary" style="padding:8px 14px;font-size:13px;" onclick="openPricing()">Upgrade to Pro</button>
+      </div>
+      <button class="profile-chip" onclick="switchView('profile')">
+        <span class="avatar-circle" id="sidebarAvatar">?</span>
+        <span class="profile-chip-text">
+          <span class="profile-chip-name" id="sidebarName">Guest</span>
+          <span class="profile-chip-plan" id="sidebarPlan">Free plan</span>
+        </span>
+        <svg class="icon icon-sm" style="color:var(--text-tertiary)"><use href="#i-more"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN COLUMN ============ -->
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn btn-ghost" style="padding:6px;border-radius:8px;" onclick="toggleSidebar()">
+          <svg class="icon"><use href="#i-menu"/></svg>
+        </button>
+        <button class="model-select">
+          ChatAI 2.0 <svg class="icon icon-sm"><use href="#i-chevron-down"/></svg>
+        </button>
+      </div>
+      <span class="demo-badge">Frontend demo — Phase 1</span>
+    </header>
+
+    <!-- ---------- CHAT VIEW ---------- -->
+    <section class="view active" id="view-chat">
+      <div class="chat-scroll" id="chatScroll">
+        <div class="chat-inner" id="chatInner">
+          <div class="chat-empty" id="chatEmpty">
+            <span class="brand-mark">A</span>
+            <h3>What are we building today?</h3>
+            <p>Ask for a website, an idea, or a piece of code — or try one of these.</p>
+            <div class="suggestion-chips">
+              <button class="chip" onclick="sendSuggestion('Build me a one-page site for a bakery')">Build a bakery landing page</button>
+              <button class="chip" onclick="sendSuggestion('Give me 5 name ideas for my AI app')">Name ideas for my app</button>
+              <button class="chip" onclick="sendSuggestion('Explain how Supabase Auth works')">Explain Supabase Auth</button>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
+      <div class="chat-inputbar">
+        <div class="chat-inputbar-inner">
+          <textarea id="chatInput" placeholder="Message ChatAI…" rows="1" onkeydown="handleChatKey(event)" oninput="autoGrow(this)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+            <svg class="icon icon-sm"><use href="#i-send"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
 
-    <script src="script.js"></script>
+    <!-- ---------- IMAGE / VIDEO VIEW ---------- -->
+    <section class="view" id="view-image">
+      <div class="view-header"><h2>Images &amp; video</h2></div>
+      <p class="view-sub">Describe what you want to see. Real generation connects to an AI image/video API in Phase 2.</p>
+      <div class="media-tabs">
+        <button class="media-tab active" onclick="setMediaTab('image', this)">Image</button>
+        <button class="media-tab" onclick="setMediaTab('video', this)">Video</button>
+      </div>
+      <div class="prompt-bar">
+        <textarea id="mediaPrompt" placeholder="A copper-toned poster for a Moroccan tea brand…" rows="1"></textarea>
+        <button class="btn btn-primary" onclick="generateMedia()">Generate</button>
+      </div>
+      <div class="media-scroll">
+        <div class="results-grid" id="resultsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ---------- EXPLORE VIEW ---------- -->
+    <section class="view" id="view-explore">
+      <div class="view-header"><h2>Explore</h2></div>
+      <p class="view-sub">What people are publishing with ChatAI.</p>
+      <div class="explore-scroll">
+        <div class="explore-grid" id="exploreGrid"></div>
+      </div>
+    </section>
+
+    <!-- ---------- PLANNING VIEW ---------- -->
+    <section class="view" id="view-planning">
+      <div class="view-header">
+        <h2>Planning</h2>
+      </div>
+      <p class="view-sub">Sketch the roadmap for your next build. Drag cards between columns.</p>
+      <div class="kanban-scroll">
+        <div class="kanban-board" id="kanbanBoard"></div>
+      </div>
+    </section>
+
+    <!-- ---------- PROJECTS VIEW ---------- -->
+    <section class="view" id="view-projects">
+      <div class="view-header"><h2>Projects</h2></div>
+      <p class="view-sub">Each project keeps its own chats, files and generated media together.</p>
+      <div class="projects-scroll">
+        <div class="projects-grid" id="projectsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ---------- CODE VIEW ---------- -->
+    <section class="view" id="view-code">
+      <div class="view-header"><h2>Code</h2></div>
+      <p class="view-sub">Browse the files ChatAI is helping you write.</p>
+      <div class="code-workspace">
+        <div class="file-tree" id="fileTree"></div>
+        <div class="code-pane">
+          <div class="code-toolbar">
+            <span id="codeFileName">app.js</span>
+            <span>read-only preview</span>
+          </div>
+          <div class="code-body" id="codeBody"></div>
+          <div class="code-ask-bar">
+            <input id="codeAskInput" placeholder="Ask ChatAI to change this file…" />
+            <button class="btn btn-primary" onclick="codeAsk()">Ask</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- PROFILE VIEW ---------- -->
+    <section class="view" id="view-profile">
+      <div class="view-header"><h2>Profile &amp; settings</h2></div>
+      <div class="profile-scroll">
+        <div class="profile-wrap">
+          <div class="profile-head">
+            <span class="profile-avatar-lg" id="profileAvatar">?</span>
+            <div>
+              <h3 id="profileName">Guest</h3>
+              <p style="color:var(--text-secondary);font-size:13.5px;margin-top:2px;" id="profileEmail">Not signed in</p>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <h4>Plan</h4>
+            <div class="profile-row"><span>Current plan</span><span class="badge badge-accent" id="profilePlanBadge">Free</span></div>
+            <div class="profile-row"><span>Messages today</span><span id="profileUsageText">6 / 20</span></div>
+            <div class="usage-bar-track"><div class="usage-bar-fill" id="usageFill" style="width:30%"></div></div>
+            <div style="margin-top:16px;">
+              <button class="btn btn-primary" onclick="openPricing()">Upgrade to Pro</button>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <h4>Account</h4>
+            <div class="profile-row"><span>Signed in with</span><span id="profileProvider">Email</span></div>
+            <div class="profile-row"><span>Log out of ChatAI</span><button class="btn btn-danger-ghost" onclick="logout()">Log out</button></div>
+          </div>
+
+          <div class="profile-card">
+            <h4>AI behavior rules</h4>
+            <p style="color:var(--text-secondary);font-size:13px;line-height:1.6;">
+              This is where the site owner sets what ChatAI is and isn't allowed to say — for example, refusing
+              illegal requests. In Phase 1 this is just a preview field; in Phase 2 it becomes the
+              <code style="font-family:var(--font-mono);color:var(--accent);">systemInstruction</code> sent to the AI API on the server (see <code style="font-family:var(--font-mono)">backend/server.js</code>).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ============ PRICING MODAL ============ -->
+<div class="modal-overlay" id="pricingModal" hidden>
+  <div class="modal" style="max-width:580px;position:relative;">
+    <button class="modal-close" onclick="closeModal('pricingModal')"><svg class="icon icon-sm"><use href="#i-x"/></svg></button>
+    <h2>Upgrade your plan</h2>
+    <p style="color:var(--text-secondary);font-size:13.5px;margin-top:6px;">Prices shown in Moroccan dirham. Real payments connect once billing is wired up in Phase 2/3.</p>
+    <div class="plans-grid">
+      <div class="plan-card">
+        <span class="plan-name">Free</span>
+        <div class="plan-price">0 <span>MAD /mo</span></div>
+        <ul class="plan-features">
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> 20 messages / day</li>
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> 5 images / day</li>
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> 1 active project</li>
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> Standard response speed</li>
+        </ul>
+        <button class="btn btn-secondary btn-block" disabled>Current plan</button>
+      </div>
+      <div class="plan-card highlight">
+        <span class="plan-name">Pro</span>
+        <div class="plan-price">99 <span>MAD /mo</span></div>
+        <ul class="plan-features">
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> Unlimited messages</li>
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> 100 images/day + video</li>
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> Unlimited projects</li>
+          <li><svg class="icon icon-sm"><use href="#i-check"/></svg> Priority response speed</li>
+        </ul>
+        <button class="btn btn-primary btn-block" onclick="mockUpgrade()">Upgrade — 99 MAD/mo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NEW PROJECT MODAL ============ -->
+<div class="modal-overlay" id="projectModal" hidden>
+  <div class="modal" style="max-width:420px;position:relative;">
+    <button class="modal-close" onclick="closeModal('projectModal')"><svg class="icon icon-sm"><use href="#i-x"/></svg></button>
+    <h2 style="margin-bottom:18px;">New project</h2>
+    <div class="field"><label for="newProjectName">Project name</label><input id="newProjectName" placeholder="My bakery website" /></div>
+    <div class="field"><label for="newProjectDesc">Description</label><input id="newProjectDesc" placeholder="What is it for?" /></div>
+    <button class="btn btn-primary btn-block" onclick="createProject()">Create project</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
 </body>
 </html>
