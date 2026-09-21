@@ -1,613 +1,298 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
+// Auth Modal Logic
+const loginBtn = document.getElementById('loginBtn');
+const authModal = document.getElementById('authModal');
+const closeModal = document.querySelector('.close-modal');
 
-import {
-  createClient
-} from "@supabase/supabase-js";
-
-import {
-  GoogleGenAI
-} from "@google/genai";
-
-
-dotenv.config();
-
-
-const app = express();
-
-
-app.use(
-  cors({
-    origin: true,
-    credentials: true
-  })
-);
-
-
-app.use(express.json());
-
-
-/* ==========================================
-   CLIENTS
-========================================== */
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
-
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
+loginBtn.addEventListener('click', () => {
+    authModal.classList.add('active');
 });
 
+closeModal.addEventListener('click', () => {
+    authModal.classList.remove('active');
+});
 
-/* ==========================================
-   SYSTEM INSTRUCTIONS
-========================================== */
+// إغلاق النافذة يلا كليكا برا المربع
+authModal.addEventListener('click', (e) => {
+    if(e.target === authModal) {
+        authModal.classList.remove('active');
+    }
+});
 
-const SYSTEM_INSTRUCTION = `
-You are Niveau AI.
-
-You are a helpful AI assistant inside the Niveau AI platform.
-
-Your capabilities include:
-- answering questions
-- helping with programming
-- creating website code
-- brainstorming ideas
-- explaining concepts
-- helping with writing
-
-Safety rules:
-- Do not help users perform illegal activities.
-- Do not provide instructions for harmful wrongdoing.
-- Do not expose private information.
-- Do not claim to have performed actions you did not perform.
-- Be honest about limitations.
-- If a request is unsafe or illegal, refuse that part and offer a safe alternative.
-
-Always be helpful, clear and concise.
-`;
-
-
-/* ==========================================
-   AUTHENTICATE USER
-========================================== */
-
-async function authenticateUser(req) {
-
-  const authHeader =
-    req.headers.authorization;
-
-
-  if (!authHeader) {
-
-    return null;
-
-  }
-
-
-  const token =
-    authHeader.replace(
-      "Bearer ",
-      ""
-    );
-
-
-  if (!token) {
-
-    return null;
-
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabase.auth.getUser(
-      token
-    );
-
-
-  if (error || !data.user) {
-
-    return null;
-
-  }
-
-
-  return data.user;
-
+// التبديل بين تسجيل الدخول وإنشاء حساب
+function switchTab(tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tabName + 'Form').classList.add('active');
 }
 
+// Chat UI Logic (تجريبي MVP)
+const sendBtn = document.getElementById('sendBtn');
+const userInput = document.getElementById('userInput');
+const chatContainer = document.getElementById('chatContainer');
+const welcomeScreen = document.querySelector('.welcome-screen');
 
-/* ==========================================
-   CHAT
-========================================== */
+function addMessage(text, sender) {
+    // إخفاء رسالة الترحيب
+    if(welcomeScreen) welcomeScreen.style.display = 'none';
 
-app.post(
-  "/api/chat",
-  async (req, res) => {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', sender);
 
-    try {
+    const icon = sender === 'user' ? '<i class="fa-regular fa-user"></i>' : '<i class="fa-solid fa-brain"></i>';
+    
+    msgDiv.innerHTML = `
+        <div class="avatar-chat">${icon}</div>
+        <div class="message-content">
+            <p>${text}</p>
+        </div>
+    `;
+    
+    chatContainer.appendChild(msgDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight; // Auto scroll to bottom
+}
 
-      const user =
-        await authenticateUser(req);
+sendBtn.addEventListener('click', () => {
+    const text = userInput.value.trim();
+    if(!text) return;
 
+    // إضافة رسالة المستخدم
+    addMessage(text, 'user');
+    userInput.value = '';
 
-      if (!user) {
+    // محاكاة رد الذكاء الاصطناعي (غادي تبدلها بـ API فالمستقبل)
+    setTimeout(() => {
+        addMessage("هذا رد تجريبي من Niveau AI. من بعد غادي نربطو هادشي بـ Gemini API وبقاعدة البيانات Supabase.", 'ai');
+    }, 1000);
+});
 
-        return res
-          .status(401)
-          .json({
-            error: "Unauthorized"
-          });
+// الإرسال عن طريق زر Enter
+userInput.addEventListener('keypress', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendBtn.click();
+    }
+});
+// ==========================================
+// 1. إعداد Supabase (حط الروابط ديال مشروعك هنا)
+// ==========================================
+const supabaseUrl = 'YOUR_SUPABASE_PROJECT_URL'; 
+const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-      }
+// ==========================================
+// 2. إنشاء حساب جديد (Register)
+// ==========================================
+document.getElementById('submitRegister').addEventListener('click', async () => {
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
 
+    if (!email || !password || !firstName) {
+        alert("عافاك عمر الخانات كاملين!");
+        return;
+    }
 
-      const {
-        conversationId,
-        message
-      } = req.body;
-
-
-      if (!message) {
-
-        return res
-          .status(400)
-          .json({
-            error: "Message is required"
-          });
-
-      }
-
-
-      /* ------------------------------------
-         CREATE CONVERSATION IF NECESSARY
-      ------------------------------------ */
-
-      let activeConversationId =
-        conversationId;
-
-
-      if (!activeConversationId) {
-
-        const {
-          data: conversation,
-          error
-        } =
-          await supabase
-            .from("conversations")
-            .insert({
-
-              user_id: user.id,
-
-              title:
-                message.substring(
-                  0,
-                  60
-                )
-
-            })
-            .select()
-            .single();
-
-
-        if (error) {
-
-          throw error;
-
+    // تسجيل اليوزر مع حفظ السمية والكنية في User Metadata
+    const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+            data: {
+                first_name: firstName,
+                last_name: lastName
+            }
         }
+    });
 
+    if (error) {
+        alert("خطأ في التسجيل: " + error.message);
+    } else {
+        alert("تم إنشاء الحساب بنجاح! راجع الإيميل ديالك باش تفعل الحساب.");
+        switchTab('login'); // نرجعوه لصفحة الدخول
+    }
+});
 
-        activeConversationId =
-          conversation.id;
+// ==========================================
+// 3. تسجيل الدخول العادي (Login with Email)
+// ==========================================
+document.getElementById('submitLogin').addEventListener('click', async () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
 
-      }
+    if (!email || !password) {
+        alert("المرجو إدخال الإيميل وكلمة المرور.");
+        return;
+    }
 
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
 
-      /* ------------------------------------
-         SAVE USER MESSAGE
-      ------------------------------------ */
+    if (error) {
+        alert("كلمة المرور أو الإيميل غالطين: " + error.message);
+    } else {
+        authModal.classList.remove('active'); // سد النافذة
+        checkUserStatus(); // تحديث الواجهة
+    }
+});
 
-      const {
-        error: userMessageError
-      } =
-        await supabase
-          .from("messages")
-          .insert({
+// ==========================================
+// 4. الدخول باستخدام Google (OAuth)
+// ==========================================
+document.getElementById('googleLogin').addEventListener('click', async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+    });
+    // Supabase غادي يدي اليوزر لصفحة جوجل ويرجعو للموقع أوتوماتيكياً
+});
 
-            conversation_id:
-              activeConversationId,
-
-            user_id:
-              user.id,
-
-            role: "user",
-
-            content: message
-
-          });
-
-
-      if (userMessageError) {
-
-        throw userMessageError;
-
-      }
-
-
-      /* ------------------------------------
-         GET HISTORY
-      ------------------------------------ */
-
-      const {
-        data: history,
-        error: historyError
-      } =
-        await supabase
-          .from("messages")
-          .select(
-            "role, content"
-          )
-          .eq(
-            "conversation_id",
-            activeConversationId
-          )
-          .order(
-            "created_at",
-            {
-              ascending: true
+// ==========================================
+// 5. التحقق من حالة المستخدم وتحديث الواجهة (Session Check)
+// ==========================================
+async function checkUserStatus() {
+    // جلب بيانات اليوزر الحالي
+    const { data: { user } } = await supabase.auth.getUser();
+    const profileBtn = document.getElementById('loginBtn');
+    
+    if (user) {
+        // إذا كان مسجل الدخول، غنبدلو الزر لسميتو ونعطيو إمكانية تسجيل الخروج
+        const userName = user.user_metadata.first_name || user.email.split('@')[0];
+        
+        profileBtn.innerHTML = `
+            <div class="avatar"><i class="fa-solid fa-user-check" style="color: #10a37f;"></i></div>
+            <span>${userName} (خروج)</span>
+        `;
+        
+        // تغيير وظيفة الزر لتسجيل الخروج
+        profileBtn.onclick = async () => {
+            if(confirm("واش بغيتي تخرج من الحساب؟")) {
+                await supabase.auth.signOut();
+                window.location.reload(); // إعادة تحميل الصفحة باش يرجع زائر عادي
             }
-          );
+        };
+    } else {
+        // إذا كان زائر
+        profileBtn.innerHTML = `
+            <div class="avatar"><i class="fa-regular fa-user"></i></div>
+            <span>Login / Register</span>
+        `;
+        // فتح نافذة التسجيل
+        profileBtn.onclick = () => authModal.classList.add('active');
+    }
+}
 
+// تشغيل الفحص أول ما تفتح الصفحة
+checkUserStatus();
+let currentChatId = null; // غنخزنو فيها الآيدي ديال الشات الحالي
 
-      if (historyError) {
-
-        throw historyError;
-
-      }
-
-
-      /* ------------------------------------
-         GEMINI CONTENT
-      ------------------------------------ */
-
-      const contents =
-        history.map(
-          item => ({
-
-            role:
-              item.role === "assistant"
-                ? "model"
-                : "user",
-
-            parts: [
-              {
-                text:
-                  item.content
-              }
-            ]
-
-          })
-        );
-
-
-      /* ------------------------------------
-         GENERATE AI RESPONSE
-      ------------------------------------ */
-
-      const response =
-        await ai.models.generateContent({
-
-          model:
-            "gemini-3.8-flash",
-
-          contents,
-
-          config: {
-
-            systemInstruction:
-              SYSTEM_INSTRUCTION
-
-          }
-
-        });
-
-
-      const answer =
-        response.text;
-
-
-      /* ------------------------------------
-         SAVE AI MESSAGE
-      ------------------------------------ */
-
-      const {
-        error: assistantError
-      } =
-        await supabase
-          .from("messages")
-          .insert({
-
-            conversation_id:
-              activeConversationId,
-
-            user_id:
-              user.id,
-
-            role: "assistant",
-
-            content:
-              answer
-
-          });
-
-
-      if (assistantError) {
-
-        throw assistantError;
-
-      }
-
-
-      /* ------------------------------------
-         UPDATE CONVERSATION
-      ------------------------------------ */
-
-      await supabase
-        .from("conversations")
-        .update({
-
-          updated_at:
-            new Date().toISOString()
-
-        })
-        .eq(
-          "id",
-          activeConversationId
-        )
-        .eq(
-          "user_id",
-          user.id
-        );
-
-
-      return res.json({
-
-        conversationId:
-          activeConversationId,
-
-        message:
-          answer
-
-      });
-
+// ==========================================
+// 1. إنشاء محادثة جديدة (New Chat)
+// ==========================================
+async function createNewChat() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        alert("خصك تسجل الدخول باش تبدا شات جديد!");
+        authModal.classList.add('active');
+        return;
     }
 
-    catch (error) {
+    // إنشاء سطر جديد في جدول chats
+    const { data, error } = await supabase
+        .from('chats')
+        .insert([{ user_id: user.id, title: 'محادثة جديدة' }])
+        .select()
+        .single();
 
-      console.error(
-        "CHAT ERROR:",
-        error
-      );
-
-
-      return res
-        .status(500)
-        .json({
-
-          error:
-            "Something went wrong."
-
-        });
-
+    if (error) {
+        console.error("خطأ في إنشاء المحادثة:", error);
+    } else {
+        currentChatId = data.id; // حفظنا الآيدي ديال الشات
+        chatContainer.innerHTML = ''; // خوينا الشاشة ديال الشات
+        addMessage("مرحبا! شات جديد تفتح، كيفاش نقدر نعاونك؟", 'ai');
     }
+}
 
-  }
-);
+// ربط زر New Chat بهاد الفانكشن
+document.querySelector('.new-chat-btn').addEventListener('click', createNewChat);
 
+// ==========================================
+// 2. حفظ الرسائل في القاعدة (Save Message)
+// ==========================================
+async function saveMessageToDB(role, content) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || !currentChatId) return;
 
-/* ==========================================
-   GET CONVERSATIONS
-========================================== */
-
-app.get(
-  "/api/conversations",
-  async (req, res) => {
-
-    try {
-
-      const user =
-        await authenticateUser(req);
-
-
-      if (!user) {
-
-        return res
-          .status(401)
-          .json({
-            error: "Unauthorized"
-          });
-
-      }
-
-
-      const {
-        data,
-        error
-      } =
-        await supabase
-          .from("conversations")
-          .select("*")
-          .eq(
-            "user_id",
-            user.id
-          )
-          .order(
-            "updated_at",
+    const { error } = await supabase
+        .from('messages')
+        .insert([
             {
-              ascending: false
+                chat_id: currentChatId,
+                user_id: user.id,
+                role: role,
+                content: content
             }
-          );
+        ]);
 
+    if (error) console.error("خطأ في حفظ الرسالة:", error);
+}
 
-      if (error) {
+// ==========================================
+// 3. تعديل زر الإرسال (Send Button Logic)
+// ==========================================
+// غادي نبدلو الفانكشن ديال sendBtn اللي درنا قبل بهادي باش تولي تحفظ فـ Database
 
-        throw error;
+sendBtn.addEventListener('click', async () => {
+    const text = userInput.value.trim();
+    if(!text) return;
 
-      }
-
-
-      res.json(data);
-
+    // يلا ماكانش شات مفتوح، نكرييو واحد جديد أوتوماتيك
+    if (!currentChatId) {
+        await createNewChat();
     }
 
-    catch (error) {
+    // 1. عرض وحفظ رسالة المستخدم
+    addMessage(text, 'user');
+    userInput.value = '';
+    await saveMessageToDB('user', text); // الحفظ في Supabase
 
-      console.error(error);
+    // 2. محاكاة رد الذكاء الاصطناعي (من بعد غنربطوه بـ Gemini API)
+    // غنديرو loading صغير
+    const loadingId = "loading-" + Date.now();
+    addMessage("Niveau AI بصدد الكتابة...", 'ai', loadingId);
 
-      res
-        .status(500)
-        .json({
-          error:
-            "Failed to load conversations"
-        });
+    setTimeout(async () => {
+        // حيدنا رسالة الـ Loading
+        document.getElementById(loadingId).remove();
+        
+        const aiResponse = "هذا رد تجريبي من Niveau AI. من بعد غادي نربطو هادشي بـ Gemini API.";
+        
+        // عرض وحفظ رسالة الذكاء الاصطناعي
+        addMessage(aiResponse, 'ai');
+        await saveMessageToDB('ai', aiResponse); // الحفظ في Supabase
+    }, 1500);
+});
 
-    }
+// تعديل بسيط على addMessage باش تقبل ID اختياري
+function addMessage(text, sender, id = "") {
+    if(welcomeScreen) welcomeScreen.style.display = 'none';
 
-  }
-);
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', sender);
+    if(id) msgDiv.id = id;
 
-
-/* ==========================================
-   GET MESSAGES
-========================================== */
-
-app.get(
-  "/api/conversations/:id/messages",
-  async (req, res) => {
-
-    try {
-
-      const user =
-        await authenticateUser(req);
-
-
-      if (!user) {
-
-        return res
-          .status(401)
-          .json({
-            error: "Unauthorized"
-          });
-
-      }
-
-
-      const conversationId =
-        req.params.id;
-
-
-      const {
-        data: conversation
-      } =
-        await supabase
-          .from("conversations")
-          .select("id")
-          .eq(
-            "id",
-            conversationId
-          )
-          .eq(
-            "user_id",
-            user.id
-          )
-          .single();
-
-
-      if (!conversation) {
-
-        return res
-          .status(404)
-          .json({
-            error:
-              "Conversation not found"
-          });
-
-      }
-
-
-      const {
-        data,
-        error
-      } =
-        await supabase
-          .from("messages")
-          .select("*")
-          .eq(
-            "conversation_id",
-            conversationId
-          )
-          .eq(
-            "user_id",
-            user.id
-          )
-          .order(
-            "created_at",
-            {
-              ascending: true
-            }
-          );
-
-
-      if (error) {
-
-        throw error;
-
-      }
-
-
-      res.json(data);
-
-    }
-
-    catch (error) {
-
-      console.error(error);
-
-      res
-        .status(500)
-        .json({
-          error:
-            "Failed to load messages"
-        });
-
-    }
-
-  }
-);
-
-
-/* ==========================================
-   SERVER
-========================================== */
-
-const PORT =
-  process.env.PORT || 3000;
-
-
-app.listen(
-  PORT,
-  () => {
-
-    console.log(
-      `Niveau AI backend running on port ${PORT}`
-    );
-
-  }
-);
+    const icon = sender === 'user' ? '<i class="fa-regular fa-user"></i>' : '<i class="fa-solid fa-brain"></i>';
+    
+    msgDiv.innerHTML = `
+        <div class="avatar-chat">${icon}</div>
+        <div class="message-content">
+            <p>${text}</p>
+        </div>
+    `;
+    
+    chatContainer.appendChild(msgDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
