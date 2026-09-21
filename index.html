@@ -4,23 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Niveau AI</title>
-    <!-- ملف الستيل CSS -->
     <link rel="stylesheet" href="style.css">
-    <!-- أيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- القائمة الجانبية (Sidebar) -->
+        <!-- القائمة الجانبية -->
         <aside class="sidebar">
             <div class="brand">
                 <i class="fa-solid fa-brain"></i>
                 <h2>Niveau AI</h2>
             </div>
             
-            <button class="new-chat-btn">
+            <button class="new-chat-btn" id="newChatBtn">
                 <i class="fa-solid fa-plus"></i> New Chat
             </button>
 
@@ -34,14 +32,14 @@
             </nav>
 
             <div class="sidebar-bottom">
-                <div class="upgrade-plan">
+                <div class="upgrade-plan" id="upgradeBtn">
                     <i class="fa-solid fa-bolt"></i>
                     <div>
                         <strong>Upgrade to Pro</strong>
                         <span>Get GPT-4 & Faster images</span>
                     </div>
                 </div>
-                <!-- زر البروفايل وتسجيل الدخول -->
+                
                 <div class="profile-btn" id="loginBtn">
                     <div class="avatar"><i class="fa-regular fa-user"></i></div>
                     <span>Login / Register</span>
@@ -49,7 +47,7 @@
             </div>
         </aside>
 
-        <!-- مساحة الدردشة (Main Chat Area) -->
+        <!-- مساحة الدردشة -->
         <main class="chat-main">
             <header class="mobile-header">
                 <i class="fa-solid fa-bars menu-toggle"></i>
@@ -57,13 +55,10 @@
             </header>
 
             <div class="chat-container" id="chatContainer">
-                <!-- رسالة الترحيب -->
-                <div class="welcome-screen">
+                <div class="welcome-screen" id="welcomeScreen">
                     <h1>كيفاش نقدر نعاونك اليوم؟</h1>
                     <p>أنا Niveau AI، نقدر نكتب كود، نصاوب صور، ونعاونك فمشاريعك.</p>
                 </div>
-                
-                <!-- الميساجات غادي يبانو هنا -->
             </div>
 
             <div class="input-container">
@@ -76,21 +71,18 @@
         </main>
     </div>
 
-    <!-- نافذة تسجيل الدخول وإنشاء حساب (Auth Modal) -->
+    <!-- نافذة تسجيل الدخول / إنشاء حساب -->
     <div class="modal-overlay" id="authModal">
         <div class="auth-box">
-            <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            <button class="close-modal" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
             
             <div class="auth-tabs">
-                <button class="tab active" onclick="switchTab('login')">تسجيل الدخول</button>
-                <button class="tab" onclick="switchTab('register')">إنشاء حساب</button>
+                <button class="tab active" onclick="switchTab('login', event)">تسجيل الدخول</button>
+                <button class="tab" onclick="switchTab('register', event)">إنشاء حساب</button>
             </div>
 
-            <!-- فورم تسجيل الدخول (Login Form) -->
             <div id="loginForm" class="auth-form active">
                 <button id="googleLogin" class="social-btn google"><i class="fa-brands fa-google"></i> Continue with Google</button>
-                <button class="social-btn apple"><i class="fa-brands fa-apple"></i> Continue with Apple</button>
-                <button class="social-btn facebook"><i class="fa-brands fa-facebook"></i> Continue with Facebook</button>
                 
                 <div class="divider"><span>أو</span></div>
                 
@@ -99,7 +91,6 @@
                 <button id="submitLogin" class="main-auth-btn">تسجيل الدخول</button>
             </div>
 
-            <!-- فورم إنشاء حساب (Register Form) -->
             <div id="registerForm" class="auth-form">
                 <div class="name-inputs">
                     <input type="text" id="regFirstName" placeholder="الاسم" class="auth-input">
@@ -112,7 +103,6 @@
         </div>
     </div>
 
-    <!-- ملف الجافاسكريبت -->
     <script src="script.js"></script>
 </body>
 </html>
